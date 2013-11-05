@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System.Data;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Concurrent;
@@ -12,6 +14,7 @@ using Raven.Client.Embedded;
 using Raven.Imports.Newtonsoft.Json;
 using VDS.RDF;
 using VDS.RDF.Parsing;
+using VDS.RDF.Query;
 using VDS.RDF.Writing;
 using Xunit;
 
@@ -113,7 +116,22 @@ namespace Tests
 
 
         [Fact]
-        public void Empty()
-        { }
+        public void SparqlRawRemoteQuery()
+        {
+            var queryParser = new SparqlQueryParser();
+
+            var queryString = @"DESCRIBE <http://linked.opendata.cz/resource/ATC/M01AE01>";
+            SparqlQuery query = queryParser.ParseFromString(queryString);
+            
+            var datasetUri = new Uri(@"http://linked.opendata.cz/resource/dataset/ATC");
+            var sparqlEndpointUri = new Uri(@"http://linked.opendata.cz/sparql");
+            var endpoint = new SparqlRemoteEndpoint(sparqlEndpointUri, datasetUri);
+
+            var results = endpoint.QueryRaw(queryString);
+            var stream = results.GetResponseStream();
+            var reader = new StreamReader(stream);
+            var content = reader.ReadToEnd();
+            Console.WriteLine(content);
+        }
     }
 }
