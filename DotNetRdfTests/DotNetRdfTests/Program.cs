@@ -122,12 +122,12 @@ namespace Tests
 
             var queryString = @"DESCRIBE <http://linked.opendata.cz/resource/ATC/M01AE01>";
             SparqlQuery query = queryParser.ParseFromString(queryString);
-            
+            query.ToString();
             var datasetUri = new Uri(@"http://linked.opendata.cz/resource/dataset/ATC");
             var sparqlEndpointUri = new Uri(@"http://linked.opendata.cz/sparql");
             var endpoint = new SparqlRemoteEndpoint(sparqlEndpointUri, datasetUri);
 
-            var results = endpoint.QueryRaw(queryString);
+            var results = endpoint.QueryRaw(query.ToString());
             var stream = results.GetResponseStream();
             var reader = new StreamReader(stream);
             var content = reader.ReadToEnd();
