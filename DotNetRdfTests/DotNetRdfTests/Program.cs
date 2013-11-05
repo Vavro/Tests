@@ -20,6 +20,8 @@ namespace Tests
     [JsonObject(IsReference = true)] 
     class Person
     {
+        public string Id { get; set; }
+
         public Person()
         {
             Parent = null;
@@ -109,5 +111,9 @@ namespace Tests
             }
         }
 
+
+        [Fact]
+        public void Empty()
+        { }
     }
 }
