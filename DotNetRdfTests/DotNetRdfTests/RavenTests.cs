@@ -7,6 +7,7 @@ using Raven.Abstractions.Indexing;
 using Raven.Client;
 using Raven.Client.Embedded;
 using Raven.Client.Indexes;
+using Raven.Database.Indexing;
 using Raven.Database.Server;
 using Raven.Tests.Helpers;
 using Xunit;
@@ -37,7 +38,7 @@ namespace Tests
         {
             await StoreTestData();
 
-            using (IAsyncDocumentSession session = _documentStore.OpenAsyncSession())
+            using (var session = _documentStore.OpenAsyncSession())
             {
                 IQueryable<string> petrQuery =
                     session.Query<Parent>()
@@ -59,7 +60,7 @@ namespace Tests
         {
             await StoreTestData();
 
-            using (IAsyncDocumentSession session = _documentStore.OpenAsyncSession())
+            using (var session = _documentStore.OpenAsyncSession())
             {
                 IQueryable<string> petrQuery =
                     session.Query<Parent>()
@@ -80,21 +81,22 @@ namespace Tests
         [Fact]
         public async Task HasMarieAndTomasChildrenTest()
         {
+            IndexCreation.CreateIndexes(typeof(RavenTests).Assembly, _documentStore);
+
             await StoreTestData();
 
-            using (IAsyncDocumentSession session = _documentStore.OpenAsyncSession())
+            using (var session = _documentStore.OpenSession())
             {
-                
-
                 RavenQueryStatistics statistics;
                 IQueryable<string> petrQuery =
-                    session.Query<Parent>()
+                    session.Query<Parent, AnalyzeChildrenNamesIndex>()
+                        .Customize(c => c.WaitForNonStaleResults())
                         .Statistics(out statistics)
                         .Where(parent => parent.Children.Any(child => child.Name == "Marie"))
                         .Where(parent => parent.Children.Any(child => child.Name == "Tomáš"))
                         .Select(parent => parent.Name);
 
-                IList<string> names = await petrQuery.ToListAsync();
+                IList<string> names = petrQuery.ToList();
 
                 RavenTestBase.WaitForUserToContinueTheTest(_documentStore);
 
@@ -102,6 +104,15 @@ namespace Tests
                 Assert.Equal(names.Count, 1);
                 Assert.True(names.Contains("Petr"));
             }            
+        }
+     
+        public class AnalyzeChildrenNamesIndex : AbstractIndexCreationTask<Parent>
+        {
+            public AnalyzeChildrenNamesIndex()
+            {
+                Map = parents => from parent in parents select new {Children_Name = parent.Children.Select(c => c.Name)};
+                Index(x => x.Children.Select(c => c.Name), FieldIndexing.Analyzed);
+            }
         }
 
         private async Task StoreTestData()
