@@ -26,7 +26,7 @@ namespace Tests
                 RunInMemory = true,
                 Configuration = {Port = RavenWebUiPort}
             };
-            NonAdminHttp.EnsureCanListenToWhenInNonAdminContext(RavenWebUiPort);
+            //NonAdminHttp.EnsureCanListenToWhenInNonAdminContext(RavenWebUiPort);
 
             docStore.Initialize();
 
