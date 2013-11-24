@@ -40,12 +40,12 @@ namespace Tests
 
             using (var session = _documentStore.OpenAsyncSession())
             {
-                IQueryable<string> petrQuery =
+                IQueryable<string> query =
                     session.Query<Parent>()
                         .Where(parent => parent.Children.Any(child => child.Name == "Lucie"))
                         .Select(parent => parent.Name);
                 
-                IList<string> names = await petrQuery.ToListAsync();
+                IList<string> names = await query.ToListAsync();
 
                 RavenTestBase.WaitForUserToContinueTheTest(_documentStore);
 
@@ -62,12 +62,12 @@ namespace Tests
 
             using (var session = _documentStore.OpenAsyncSession())
             {
-                IQueryable<string> petrQuery =
+                IQueryable<string> query =
                     session.Query<Parent>()
                         .Where(parent => parent.Children.Any(child => child.Name == "Lucie" || child.Name == "Scheldon"))
                         .Select(parent => parent.Name);
 
-                IList<string> names = await petrQuery.ToListAsync();
+                IList<string> names = await query.ToListAsync();
 
                 RavenTestBase.WaitForUserToContinueTheTest(_documentStore);
 
@@ -88,7 +88,7 @@ namespace Tests
             using (var session = _documentStore.OpenSession())
             {
                 RavenQueryStatistics statistics;
-                IQueryable<string> petrQuery =
+                IQueryable<string> query =
                     session.Query<Parent, AnalyzeChildrenNamesIndex>()
                         .Customize(c => c.WaitForNonStaleResults())
                         .Statistics(out statistics)
@@ -96,7 +96,7 @@ namespace Tests
                         .Where(parent => parent.Children.Any(child => child.Name == "Tomáš"))
                         .Select(parent => parent.Name);
 
-                IList<string> names = petrQuery.ToList();
+                IList<string> names = query.ToList();
 
                 RavenTestBase.WaitForUserToContinueTheTest(_documentStore);
 
