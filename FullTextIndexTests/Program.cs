@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Aspose.Pdf.Text;
+using Aspose.Pdf.Text.TextOptions;
 
 namespace FullTextIndexTests
 {
@@ -24,8 +26,16 @@ namespace FullTextIndexTests
             var extension = Path.GetExtension(fileName);
             if (extension == ".pdf")
             {
+                var doc = new Aspose.Pdf.Document(fileName);
+                var textAbsorber = new TextAbsorber();
+                doc.Pages.Accept(textAbsorber);
 
+                var text = textAbsorber.Text;
+
+                Console.WriteLine(text);
             }
+
+            Console.ReadLine();
         }
     }
 }
