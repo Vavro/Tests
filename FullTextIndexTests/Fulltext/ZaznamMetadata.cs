@@ -15,11 +15,21 @@ namespace FullTextIndexTests.Fulltext
 
     public class ZaznamFulltextDocument : FullTextDocument
     {
+        public ZaznamFulltextDocument()
+        {
+            ZaznamMetadata = new ZaznamMetadata();
+        }
+
         public ZaznamMetadata ZaznamMetadata { get; set; }
     }
 
     public class FullTextDocument
     {
+        public FullTextDocument()
+        {
+            FileFulltextInfo = new FileFulltextInfo();
+        }
+
         public string Id { get; set; }
         public FileFulltextInfo FileFulltextInfo { get; set; }
     }

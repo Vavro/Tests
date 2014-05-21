@@ -82,7 +82,7 @@ namespace FullTextIndexTests.Fulltext
             var doc = LuceneIndexer.CreateDocument(insertedDocument);
             //todo: numeric index of date should be faster, but should try both
             //var dateField = DateTools.DateToString(insertedDocument.ZaznamMetadata.VytvoreniZaznamu, DateTools.Resolution.DAY); //todo: date resolution?
-            doc.Add(new NumericField(ZaznamFieldNames.Vytvoreno).SetLongValue(insertedDocument.ZaznamMetadata.VytvoreniZaznamu.Ticks));
+            doc.Add(new NumericField(ZaznamFieldNames.Vytvoreno, 1, Field.Store.YES, true).SetLongValue(insertedDocument.ZaznamMetadata.VytvoreniZaznamu.Ticks));
 
             _indexer.AddDocument(doc);
         }
@@ -113,7 +113,22 @@ namespace FullTextIndexTests.Fulltext
             mainQuery.Add(fullTextQuery, Occur.MUST);
 
             var searcher = new IndexSearcher(_indexer.Index);
-            searcher.Search(mainQuery, LuceneIndexer.MaxResults);
+            var topDocs = searcher.Search(mainQuery, LuceneIndexer.MaxResults);
+            for (int i = 0; i < topDocs.TotalHits; i++)
+            {
+                Document doc = searcher.Doc(i);
+                string ticksString = doc.Get(ZaznamFieldNames.Vytvoreno);
+                long ticks = long.Parse(ticksString);
+                var vytvoreno = new DateTime(ticks);
+
+                var text = doc.Get(LuceneIndexer.FieldNames.FileText);
+                var id = doc.Get(LuceneIndexer.FieldNames.Id);
+
+                Console.WriteLine("id: {0}", id);
+                Console.WriteLine("vytvoreno: {0}", vytvoreno);
+                Console.WriteLine("text : {0}", text);
+
+            }
         }
 
         private static long? GetTicksOrNull(DateTime? dateTime)
