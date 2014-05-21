@@ -99,7 +99,7 @@ namespace FullTextIndexTests.Fulltext
 
         //todo: return type
         //todo: extending more metadata
-        public void SearchIndex(DateTime? from, DateTime? to, string searchedText)
+        public List<string> SearchIndex(DateTime? from, DateTime? to, string searchedText)
         {
             var fromLong = GetTicksOrNull(from);
             var toLong = GetTicksOrNull(to);
@@ -114,6 +114,8 @@ namespace FullTextIndexTests.Fulltext
 
             var searcher = new IndexSearcher(_indexer.Index);
             var topDocs = searcher.Search(mainQuery, LuceneIndexer.MaxResults);
+            var resultIds = new List<string>();
+
             for (int i = 0; i < topDocs.TotalHits; i++)
             {
                 Document doc = searcher.Doc(i);
@@ -125,10 +127,12 @@ namespace FullTextIndexTests.Fulltext
                 var id = doc.Get(LuceneIndexer.FieldNames.Id);
 
                 Console.WriteLine("id: {0}", id);
+                resultIds.Add(id);
                 //Console.WriteLine("vytvoreno: {0}", vytvoreno);
                 //Console.WriteLine("text : {0}", text);
-
             }
+
+            return resultIds;
         }
 
         private static long? GetTicksOrNull(DateTime? dateTime)
