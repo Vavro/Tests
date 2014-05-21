@@ -59,6 +59,9 @@ namespace FullTextIndexTests
         private static void AutoSearch()
         {
             _zaznamFulltext.SearchIndex(null, DateTime.Now, "Protokol entity typu");
+
+
+            _zaznamFulltext.SearchIndex(DateTime.Now, null, "Protokol entity typu");
         }
 
         private static void AddFilesToIndex()
