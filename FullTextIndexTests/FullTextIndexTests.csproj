@@ -96,6 +96,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fulltext\ZaznamFullTextIndexer.cs" />
+    <Compile Include="Fulltext\ZaznamMetadata.cs" />
     <Compile Include="IFilter\Native.cs" />
     <Compile Include="IFilter\ParseHelper.cs" />
     <Compile Include="Program.cs" />
