@@ -13,10 +13,14 @@ namespace FullTextIndexTests.Fulltext
         //todo: add PP, ORG, USR identifikaci
     }
 
-    public class ZaznamFulltextDocument
+    public class ZaznamFulltextDocument : FullTextDocument
+    {
+        public ZaznamMetadata ZaznamMetadata { get; set; }
+    }
+
+    public class FullTextDocument
     {
         public string Id { get; set; }
-        public ZaznamMetadata ZaznamMetadata { get; set; }
         public FileFulltextInfo FileFulltextInfo { get; set; }
     }
 

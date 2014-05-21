@@ -11,14 +11,15 @@ namespace FullTextIndexTests.IFilter
 {
     public class ParseHelper
     {
-        public static string ParseIFilter(Stream s)
+        public static string ParseIFilter(Stream s, string fileName)
         {
             var job = new Job();
             job.AddCurrentProces();
 
             // Get an IFilter for a file or file extension
             IFilter filter = null;
-            FilterReturnCodes result = NativeMethods.LoadIFilter(".pdf", null, ref filter);
+            var fileExtension = Path.GetExtension(fileName);
+            FilterReturnCodes result = NativeMethods.LoadIFilter(fileExtension, null, ref filter);
             if (result != FilterReturnCodes.S_OK)
             {
                 Marshal.ThrowExceptionForHR((int)result);
