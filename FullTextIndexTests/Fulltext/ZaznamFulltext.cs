@@ -34,7 +34,7 @@ namespace FullTextIndexTests.Fulltext
         public const int MaxResults = 1000;
 
         //todo: switch to persistent directory
-        public readonly Directory Index = new RAMDirectory();
+        public readonly Directory Index = FSDirectory.Open("lucene_index");
         
         //todo: add better czech analyzer with stemming
         public readonly CzechAnalyzer Analyzer = new CzechAnalyzer(Lucene.Net.Util.Version.LUCENE_30);
