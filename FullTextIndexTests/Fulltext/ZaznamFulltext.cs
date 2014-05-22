@@ -23,19 +23,43 @@ using Version = Lucene.Net.Util.Version;
 
 namespace FullTextIndexTests.Fulltext
 {
+    //todo: detect corrupted indexes
+    //todo: add rebuild index possibilities - for corrupted indexes
     public class LuceneIndexer
     {
+        private class LuceneIndexDir
+        {
+            private string _luceneDir = "lucene_index";
+            private FSDirectory _directoryTemp;
+            public FSDirectory Directory
+            {
+                get
+                {
+                    if (_directoryTemp == null) _directoryTemp = FSDirectory.Open(new DirectoryInfo(_luceneDir));
+                    if (IndexWriter.IsLocked(_directoryTemp)) IndexWriter.Unlock(_directoryTemp);
+                    _directoryTemp.ClearLock("write.lock");
+
+                    return _directoryTemp;
+                }
+            }  
+        }
+
         public static class FieldNames
         {
             public const string FileText = "FileText";
             public const string Id = "Id";
         }
 
+        public LuceneIndexer()
+        {
+            var luceneDir = new LuceneIndexDir();
+            Index = luceneDir.Directory;
+        }
         public const int MaxResults = 1000;
 
-        //todo: switch to persistent directory
-        public readonly Directory Index = FSDirectory.Open("lucene_index");
-        
+        public readonly Directory Index;
+
+
         //todo: add better czech analyzer with stemming
         public readonly CzechAnalyzer Analyzer = new CzechAnalyzer(Lucene.Net.Util.Version.LUCENE_30);
         
@@ -43,7 +67,7 @@ namespace FullTextIndexTests.Fulltext
         {
             
             //todo: use indexwriter for longer than one write
-            using (IndexWriter w = new IndexWriter(Index, Analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED))
+            using (IndexWriter w = new IndexWriter(Index, Analyzer, IndexWriter.MaxFieldLength.UNLIMITED))
             {
                 w.AddDocument(doc);
                 w.Optimize();
