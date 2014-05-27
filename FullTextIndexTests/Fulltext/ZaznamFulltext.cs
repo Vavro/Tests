@@ -67,7 +67,7 @@ namespace FullTextIndexTests.Fulltext
         {
             
             //todo: use indexwriter for longer than one write
-            using (IndexWriter w = new IndexWriter(Index, Analyzer, IndexWriter.MaxFieldLength.UNLIMITED))
+            using (IndexWriter w = new IndexWriter(Index, Analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED))
             {
                 w.AddDocument(doc);
                 w.Optimize();

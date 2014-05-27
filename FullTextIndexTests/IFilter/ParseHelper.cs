@@ -39,10 +39,19 @@ namespace FullTextIndexTests.IFilter
             var persistStream = (IPersistStream)filter;
             persistStream.Load(comStream);
 
+
+            const FilterInit iflags = FilterInit.IFILTER_INIT_CANON_HYPHENS |
+                                                      FilterInit.IFILTER_INIT_CANON_PARAGRAPHS |
+                                                      FilterInit.IFILTER_INIT_CANON_SPACES |
+                                                      FilterInit.IFILTER_INIT_APPLY_INDEX_ATTRIBUTES |
+                                                      FilterInit.IFILTER_INIT_HARD_LINE_BREAKS |
+                                                      FilterInit.IFILTER_INIT_FILTER_OWNED_VALUE_OK |
+                                                      FilterInit.IFILTER_INIT_INDEXING_ONLY;
+
             // Initialize iFilter
             FilterFlags filterFlags;
             FilterReturnCodes result2 = filter.Init(
-               FilterInit.IFILTER_INIT_INDEXING_ONLY, 0, IntPtr.Zero, out filterFlags);
+               iflags, 0, IntPtr.Zero, out filterFlags);
 
             return ExtractTextFromIFilter(filter);
         }
@@ -60,6 +69,22 @@ namespace FullTextIndexTests.IFilter
                 {
                     if (chunk.flags == ChunkState.CHUNK_TEXT)
                     {
+                        switch (chunk.breakType)
+                        {
+                            case ChunkBreaktype.CHUNK_NO_BREAK:
+                                break;
+                            case ChunkBreaktype.CHUNK_EOW:
+                                sb.Append(" ");
+                                break;
+                            case ChunkBreaktype.CHUNK_EOS:
+                            case ChunkBreaktype.CHUNK_EOP:
+                            case ChunkBreaktype.CHUNK_EOC:
+                                sb.Append(Environment.NewLine);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+
                         sb.Append(ExtractTextFromChunk(filter, chunk));
                     }
 

@@ -58,15 +58,15 @@ namespace FullTextIndexTests
 
         private static void AutoSearch()
         {
-            _zaznamFulltext.SearchIndex(null, DateTime.Now, "Protokol entity typu");
+            _zaznamFulltext.SearchIndex(null, DateTime.Now, "Dolina");
 
 
-            _zaznamFulltext.SearchIndex(DateTime.Now, null, "Protokol entity typu");
+            _zaznamFulltext.SearchIndex(DateTime.Now, null, "Dolina");
         }
 
         private static void AddFilesToIndex()
         {
-            var fileName = @"c:\users\vavro\desktop\data.pdf"; //dialog.FileName;
+            var fileName = @"c:\users\vavro\desktop\ab.doc"; //dialog.FileName;
             var zaznam = new ZaznamFulltextDocument()
                          {
                              Id = "1",
