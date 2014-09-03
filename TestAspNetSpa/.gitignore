@@ -1,5 +1,9 @@
+# Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
+!packages/*/build/
+
 #disable packages folder for this project
 packages
 
-# Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
-!packages/*/build/
+#ignore sql databases in the site
+TestAspNetSpa/App_Data/*.mdf
+TestAspNetSpa/App_Data/*.ldf

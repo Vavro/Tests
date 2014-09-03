@@ -1,0 +1,14 @@
+{
+  "name": "TestAspNetSpa",
+  "version": "1.0.0",
+  "description": "Test asp net single page application for testing of npm, bower and so on",
+  "main": "Home",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tests"
+  ],
+  "author": "Petr Vávro",
+  "license": "MIT"
+}
