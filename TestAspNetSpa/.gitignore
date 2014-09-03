@@ -7,3 +7,6 @@ packages
 #ignore sql databases in the site
 TestAspNetSpa/App_Data/*.mdf
 TestAspNetSpa/App_Data/*.ldf
+
+#ignore bower_component folder
+bower_components
