@@ -1,8 +1,9 @@
 var gulp = require('gulp');
-var gulpBowerFiles = require('gulp-bower-files');
+var mainBowerFiles = require('main-bower-files');
 
 gulp.task("bower-files", function () {
-    gulpBowerFiles().pipe(gulp.dest("./TestAspNetSpa/lib"));
+    return gulp.src(mainBowerFiles())
+        .pipe(gulp.dest("./TestAspNetSpa/lib"));
 });
 
 gulp.task('default', ["bower-files"], function() {

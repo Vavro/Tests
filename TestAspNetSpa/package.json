@@ -13,6 +13,6 @@
   "license": "MIT",
   "devDependencies": {
     "gulp": "^3.8.7",
-    "gulp-bower-files": "^0.2.7"
+    "main-bower-files": "^2.0.0"
   }
 }
