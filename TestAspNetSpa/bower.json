@@ -1,0 +1,17 @@
+{
+  "name": "TestAspNetSpa",
+  "version": "0.0.0",
+  "homepage": "https://github.com/Vavro/Tests",
+  "authors": [
+    "Petr Vavro <BlackSun.Petr@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
