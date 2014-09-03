@@ -12,6 +12,7 @@
   "author": "Petr Vávro",
   "license": "MIT",
   "devDependencies": {
-    "gulp": "^3.8.7"
+    "gulp": "^3.8.7",
+    "gulp-bower-files": "^0.2.7"
   }
 }
