@@ -10,5 +10,8 @@
     "tests"
   ],
   "author": "Petr Vávro",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.8.7"
+  }
 }
