@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace EfInsertBigData
     class Program
     {
         private const string InputFile = @"D:\TestTP\output.txt";
-        private const int batchSize = 1000;
+        private const int batchSize = 100;
 
         static void Main(string[] args)
         {
@@ -20,6 +21,9 @@ namespace EfInsertBigData
                 db.Database.ExecuteSqlCommand("DELETE FROM TP_CEKAJICIZMENY");
             }
 
+            var batchesProcesed = 0;
+            var timer = new Stopwatch();
+            timer.Start();
             using (var reader = new StreamReader(InputFile))
             {
                 var line = reader.ReadLine();
@@ -44,6 +48,9 @@ namespace EfInsertBigData
                         zmeny.Add(tp);
                     }
 
+                    batchesProcesed++;
+                    Console.WriteLine("{0:##,###} items loaded, time {1:T}", batchesProcesed * batchSize, timer.Elapsed);
+
                     using (var db = new TransactionProtocolContext())
                     {
                         foreach (var tp in zmeny)
@@ -52,6 +59,8 @@ namespace EfInsertBigData
                         }
                         db.SaveChanges();
                     }
+
+                    Console.WriteLine("{0:##,###} items saved, time {1:T}", batchesProcesed * batchSize, timer.Elapsed);
 
                     if (zmeny.Count < batchSize)
                     {
