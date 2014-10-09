@@ -11,34 +11,61 @@ namespace EfInsertBigData
     class Program
     {
         private const string InputFile = @"D:\TestTP\output.txt";
+        private const int batchSize = 1000;
 
         static void Main(string[] args)
         {
+            using (var db = new TransactionProtocolContext())
+            {
+                db.Database.ExecuteSqlCommand("DELETE FROM TP_CEKAJICIZMENY");
+            }
+
             using (var reader = new StreamReader(InputFile))
             {
                 var line = reader.ReadLine();
                 //first line are headers
-
-                line = reader.ReadLine();
-                var split = line.Split(',');
-                if (split.Length != 4)
-                    throw new Exception("Wrong split part count");
-                
-                var tp = new TP_CEKAJICIZMENY()
-                         {
-                             ID = int.Parse(split[0].Trim('\'')),
-                             DATUMSTART = DateTime.Parse(split[1].Trim('\'')),
-                             DATUMEND = DateTime.Parse(split[2].Trim('\'')),
-                             ZMENYXML = split[3].Trim('\'')
-                         };
-
-                using (var db = new TransactionProtocolContext())
+                while (true)
                 {
-                    db.Set<TP_CEKAJICIZMENY>().Add(tp);
-                    db.SaveChanges();
+                    var zmeny = new List<TP_CEKAJICIZMENY>(batchSize);
+                    for (var processedLines = 0; (line = reader.ReadLine()) != null && processedLines < batchSize; processedLines++)
+                    {
+                        var split = line.Split(new string[] {"','"},StringSplitOptions.None);
+                        if (split.Length != 4)
+                            throw new Exception("Wrong split part count");
+
+                        var tp = new TP_CEKAJICIZMENY()
+                                 {
+                                     ID = int.Parse(split[0].TrimStart('\'')),
+                                     DATUMSTART = DateTime.Parse(split[1]),
+                                     DATUMEND = DateTime.Parse(split[2]),
+                                     ZMENYXML = split[3].TrimEnd('\'')
+                                 };
+
+                        zmeny.Add(tp);
+                    }
+
+                    using (var db = new TransactionProtocolContext())
+                    {
+                        foreach (var tp in zmeny)
+                        {
+                            db.Set<TP_CEKAJICIZMENY>().Add(tp);
+                        }
+                        db.SaveChanges();
+                    }
+
+                    if (zmeny.Count < batchSize)
+                    {
+                        break;
+                    }
                 }
             }
 
+
+            using (var db = new TransactionProtocolContext())
+            {
+                var elementsCont = db.Set<TP_CEKAJICIZMENY>().Count();
+                var first = db.Set<TP_CEKAJICIZMENY>().First();
+            }
 
         }
     }
