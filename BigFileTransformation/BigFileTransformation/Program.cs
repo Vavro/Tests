@@ -13,7 +13,7 @@ namespace BigFileTransformation
     {
         private const int FlushAfterLines = 100*1000;
         private const string path = @"D:\TestTP\triada_export.txt";
-        private const string outputFile = @"D:\TestTP\output_unicode.txt";
+        private const string outputFile = @"D:\TestTP\output3.txt";
 
         static void Main(string[] args)
         {
@@ -22,7 +22,7 @@ namespace BigFileTransformation
             using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.None))
             using (BufferedStream bs = new BufferedStream(fs))
             using (StreamReader reader = new StreamReader(bs))
-            using (var writer = new StreamWriter(outputFile, false, Encoding.Unicode))
+            using (var writer = new StreamWriter(outputFile, false))
             {
                 string line = null;
                 int processedLines = 0;
