@@ -16,6 +16,11 @@ namespace EfInsertBigData
 
         static void Main(string[] args)
         {
+            InsertBigData();
+        }
+
+        private static void InsertBigData()
+        {
             using (var db = new TransactionProtocolContext())
             {
                 db.Database.ExecuteSqlCommand("DELETE FROM TP_CEKAJICIZMENY");
@@ -31,9 +36,11 @@ namespace EfInsertBigData
                 while (true)
                 {
                     var zmeny = new List<TP_CEKAJICIZMENY>(batchSize);
-                    for (var processedLines = 0; (line = reader.ReadLine()) != null && processedLines < batchSize; processedLines++)
+                    for (var processedLines = 0;
+                        (line = reader.ReadLine()) != null && processedLines < batchSize;
+                        processedLines++)
                     {
-                        var split = line.Split(new string[] {"','"},StringSplitOptions.None);
+                        var split = line.Split(new string[] {"','"}, StringSplitOptions.None);
                         if (split.Length != 4)
                             throw new Exception("Wrong split part count");
 
@@ -49,7 +56,7 @@ namespace EfInsertBigData
                     }
 
                     batchesProcesed++;
-                    Console.WriteLine("{0:##,###} items loaded, time {1:T}", batchesProcesed * batchSize, timer.Elapsed);
+                    Console.WriteLine("{0:##,###} items loaded, time {1:T}", batchesProcesed*batchSize, timer.Elapsed);
 
                     using (var db = new TransactionProtocolContext())
                     {
@@ -60,7 +67,7 @@ namespace EfInsertBigData
                         db.SaveChanges();
                     }
 
-                    Console.WriteLine("{0:##,###} items saved, time {1:T}", batchesProcesed * batchSize, timer.Elapsed);
+                    Console.WriteLine("{0:##,###} items saved, time {1:T}", batchesProcesed*batchSize, timer.Elapsed);
 
                     if (zmeny.Count < batchSize)
                     {
@@ -75,7 +82,6 @@ namespace EfInsertBigData
                 var elementsCont = db.Set<TP_CEKAJICIZMENY>().Count();
                 var first = db.Set<TP_CEKAJICIZMENY>().First();
             }
-
         }
     }
 }
