@@ -11,7 +11,6 @@ namespace EfInsertBigData
         [Column(Order = 0, TypeName = "numeric")]
         public decimal ID { get; set; }
 
-        [Key]
         [Column(Order = 1)]
         public DateTime DATUMSTART { get; set; }
 

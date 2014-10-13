@@ -13,10 +13,15 @@ namespace EfInsertBigData
         }
 
         public virtual DbSet<TP_CEKAJICIZMENY> TP_CEKAJICIZMENY { get; set; }
+        public virtual DbSet<TP_ZPRACOVANE> TP_ZPRACOVANE { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TP_CEKAJICIZMENY>()
+                .Property(e => e.ID)
+                .HasPrecision(10, 0);
+
+            modelBuilder.Entity<TP_ZPRACOVANE>()
                 .Property(e => e.ID)
                 .HasPrecision(10, 0);
         }

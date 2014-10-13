@@ -6,6 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
+using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace EfInsertBigData
 {
@@ -17,6 +20,64 @@ namespace EfInsertBigData
         static void Main(string[] args)
         {
             InsertBigData();
+            Console.WriteLine("Press enter for compression");
+            Console.ReadLine();
+            CompressBigData();
+            Console.ReadLine();
+        }
+
+        private static void CompressBigData()
+        {
+            using (var db = new TransactionProtocolContext())
+            {
+                db.Database.ExecuteSqlCommand("DELETE FROM TP_ZPRACOVANE");
+            }
+
+            var batchesProcesed = 0;
+            var timer = new Stopwatch();
+            timer.Start();
+
+            //first line are headers
+            using (var transation = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
+            {
+                while (true)
+                {
+
+                    using (var db = new TransactionProtocolContext())
+                    {
+                        var cekajici = db.TP_CEKAJICIZMENY.OrderBy(t => t.DATUMEND).Take(batchSize).ToList();
+
+                        foreach (var tpCekajicizmeny in cekajici)
+                        {
+                            var compressedXml = CompressXml(tpCekajicizmeny.ZMENYXML);
+                            var zpracTp = new TP_ZPRACOVANE()
+                                          {
+                                              ID = tpCekajicizmeny.ID,
+                                              DATUMSTART = tpCekajicizmeny.DATUMSTART,
+                                              DATUMEND = tpCekajicizmeny.DATUMEND,
+                                              ZMENYXMLCOMP = compressedXml
+                                          };
+
+                            db.TP_CEKAJICIZMENY.Remove(tpCekajicizmeny);
+                            db.TP_ZPRACOVANE.Add(zpracTp);
+                        }
+
+                        db.SaveChanges();
+
+                        if (cekajici.Count < batchSize)
+                        {
+                            break;
+                        }
+                    }
+
+                    batchesProcesed++;
+                    Console.WriteLine("{0:N0} items converted, time {1:T}", batchesProcesed * batchSize, timer.Elapsed);
+
+                }
+                transation.Complete();
+            }
+
+            Console.WriteLine("FINISHED, time {0:T}", timer.Elapsed);
         }
 
         private static void InsertBigData()
@@ -40,7 +101,7 @@ namespace EfInsertBigData
                         (line = reader.ReadLine()) != null && processedLines < batchSize;
                         processedLines++)
                     {
-                        var split = line.Split(new string[] {"','"}, StringSplitOptions.None);
+                        var split = line.Split(new string[] { "','" }, StringSplitOptions.None);
                         if (split.Length != 4)
                             throw new Exception("Wrong split part count");
 
@@ -56,7 +117,7 @@ namespace EfInsertBigData
                     }
 
                     batchesProcesed++;
-                    Console.WriteLine("{0:##,###} items loaded, time {1:T}", batchesProcesed*batchSize, timer.Elapsed);
+                    Console.WriteLine("{0:##,###} items loaded, time {1:T}", batchesProcesed * batchSize, timer.Elapsed);
 
                     using (var db = new TransactionProtocolContext())
                     {
@@ -67,7 +128,7 @@ namespace EfInsertBigData
                         db.SaveChanges();
                     }
 
-                    Console.WriteLine("{0:##,###} items saved, time {1:T}", batchesProcesed*batchSize, timer.Elapsed);
+                    Console.WriteLine("{0:##,###} items saved, time {1:T}", batchesProcesed * batchSize, timer.Elapsed);
 
                     if (zmeny.Count < batchSize)
                     {
@@ -83,5 +144,43 @@ namespace EfInsertBigData
                 var first = db.Set<TP_CEKAJICIZMENY>().First();
             }
         }
+
+        private static byte[] CompressXml(string zmenyXml)
+        {
+            byte[] fileToSaveToDul;
+            var xmlAsBytes = XmlAsBytes(zmenyXml);
+            using (var inputZmenyXml = new MemoryStream(xmlAsBytes))
+            using (MemoryStream outputMemStream = new MemoryStream())
+            {
+                var internalFileName = "Test.xml";
+                using (ZipOutputStream zipStream = new ZipOutputStream(outputMemStream))
+                {
+                    zipStream.SetLevel(6); //0-9, 9 being the highest level of compression
+
+                    ZipEntry newEntry = new ZipEntry(internalFileName);
+                    newEntry.DateTime = DateTime.Now;
+
+                    zipStream.PutNextEntry(newEntry);
+
+                    StreamUtils.Copy(inputZmenyXml, zipStream, new byte[4096]);
+                    zipStream.CloseEntry();
+
+                    zipStream.IsStreamOwner = false;
+                    zipStream.Close();
+                }
+                outputMemStream.Position = 0;
+
+                // Alternative outputs:
+                // ToArray is the cleaner and easiest to use correctly with the penalty of duplicating allocated memory.
+                return outputMemStream.ToArray();
+            }
+        }
+
+        public static byte[] XmlAsBytes(string xml)
+        {
+            return Encoding.UTF8.GetBytes(xml);
+        }
     }
+
+
 }
