@@ -23,6 +23,7 @@ namespace EfInsertBigData
             Console.WriteLine("Press enter for compression");
             Console.ReadLine();
             CompressBigData();
+            Console.WriteLine("Pres enter to exit");
             Console.ReadLine();
         }
 
@@ -84,6 +85,21 @@ namespace EfInsertBigData
         {
             using (var db = new TransactionProtocolContext())
             {
+                List<object> ids = db.TP_CEKAJICIZMENY.Take(100).Select(cz => cz.ID).ToList().ConvertAll(d => (object)d);
+                
+                var sqlCommand = new StringBuilder("DELETE FROM TP_CEKAJICIZMENY WHERE ID IN (");
+                for (int i = 0; i < 100; i++)
+                {
+                    sqlCommand.Append("@p");
+                    sqlCommand.Append(i.ToString());
+                    sqlCommand.Append(", ");
+                }
+                sqlCommand.Length--;
+                sqlCommand.Length--;
+                //odstraneni posledniho ', '
+                sqlCommand.Append(")");
+                db.Database.ExecuteSqlCommand(sqlCommand.ToString(), ids.ToArray());
+
                 db.Database.ExecuteSqlCommand("DELETE FROM TP_CEKAJICIZMENY");
             }
 
