@@ -21,5 +21,8 @@ namespace EfInsertBigData
         
         [Column(TypeName = "image")]
         public byte[] ZMENYXMLCOMP { get; set; }
+
+        [MaxLength(64)]
+        public string ZMENYXMLHASH { get; set; }
     }
 }

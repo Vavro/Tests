@@ -39,43 +39,43 @@ namespace EfInsertBigData
             timer.Start();
 
             //first line are headers
-            using (var transation = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
+
+            while (true)
             {
-                while (true)
+
+                using (var db = new TransactionProtocolContext())
                 {
+                    var cekajici = db.TP_CEKAJICIZMENY.OrderBy(t => t.DATUMEND).Take(batchSize).ToList();
 
-                    using (var db = new TransactionProtocolContext())
+                    foreach (var tpCekajicizmeny in cekajici)
                     {
-                        var cekajici = db.TP_CEKAJICIZMENY.OrderBy(t => t.DATUMEND).Take(batchSize).ToList();
+                        var xmlAsBytes = XmlAsBytes(tpCekajicizmeny.ZMENYXML);
+                        var sha256OfFile = ComputeHash(xmlAsBytes);
+                        var compressedXml = CompressXml(tpCekajicizmeny.ZMENYXML);
+                        var zpracTp = new TP_ZPRACOVANE()
+                                      {
+                                          ID = tpCekajicizmeny.ID,
+                                          DATUMSTART = tpCekajicizmeny.DATUMSTART,
+                                          DATUMEND = tpCekajicizmeny.DATUMEND,
+                                          ZMENYXMLCOMP = compressedXml,
+                                          ZMENYXMLHASH = sha256OfFile
+                                      };
 
-                        foreach (var tpCekajicizmeny in cekajici)
-                        {
-                            var compressedXml = CompressXml(tpCekajicizmeny.ZMENYXML);
-                            var zpracTp = new TP_ZPRACOVANE()
-                                          {
-                                              ID = tpCekajicizmeny.ID,
-                                              DATUMSTART = tpCekajicizmeny.DATUMSTART,
-                                              DATUMEND = tpCekajicizmeny.DATUMEND,
-                                              ZMENYXMLCOMP = compressedXml
-                                          };
-
-                            db.TP_CEKAJICIZMENY.Remove(tpCekajicizmeny);
-                            db.TP_ZPRACOVANE.Add(zpracTp);
-                        }
-
-                        db.SaveChanges();
-
-                        if (cekajici.Count < batchSize)
-                        {
-                            break;
-                        }
+                        db.TP_CEKAJICIZMENY.Remove(tpCekajicizmeny);
+                        db.TP_ZPRACOVANE.Add(zpracTp);
                     }
 
-                    batchesProcesed++;
-                    Console.WriteLine("{0:N0} items converted, time {1:T}", batchesProcesed * batchSize, timer.Elapsed);
+                    db.SaveChanges();
 
+                    if (cekajici.Count < batchSize)
+                    {
+                        break;
+                    }
                 }
-                transation.Complete();
+
+                batchesProcesed++;
+                Console.WriteLine("{0:N0} items converted, time {1:T}", batchesProcesed * batchSize, timer.Elapsed);
+
             }
 
             Console.WriteLine("FINISHED, time {0:T}", timer.Elapsed);
@@ -85,22 +85,42 @@ namespace EfInsertBigData
         {
             using (var db = new TransactionProtocolContext())
             {
-                List<object> ids = db.TP_CEKAJICIZMENY.Take(100).Select(cz => cz.ID).ToList().ConvertAll(d => (object)d);
-                
-                var sqlCommand = new StringBuilder("DELETE FROM TP_CEKAJICIZMENY WHERE ID IN (");
-                for (int i = 0; i < 100; i++)
-                {
-                    sqlCommand.Append("@p");
-                    sqlCommand.Append(i.ToString());
-                    sqlCommand.Append(", ");
-                }
-                sqlCommand.Length--;
-                sqlCommand.Length--;
-                //odstraneni posledniho ', '
-                sqlCommand.Append(")");
-                db.Database.ExecuteSqlCommand(sqlCommand.ToString(), ids.ToArray());
+                var zmenyXmlToDeleteIds = db.TP_CEKAJICIZMENY.Select(cz => cz.ID).ToList();
+                var xmlToDeleteEnumerator = zmenyXmlToDeleteIds.GetEnumerator();
 
-                db.Database.ExecuteSqlCommand("DELETE FROM TP_CEKAJICIZMENY");
+                var archiveTpPageSize = 100;
+                for (int i = 0; i * archiveTpPageSize < zmenyXmlToDeleteIds.Count; i++)
+                {
+                    var ids = new List<object>();
+                    var sqlCommand = new StringBuilder("DELETE FROM TP_CEKAJICIZMENY WHERE ID IN (");
+                    for (int j = 0; j < archiveTpPageSize && (i * archiveTpPageSize) + j < zmenyXmlToDeleteIds.Count; j++)
+                    {
+                        if (!xmlToDeleteEnumerator.MoveNext())
+                        {
+                            break;
+                        }
+                        sqlCommand.Append("@p");
+                        sqlCommand.Append(j.ToString());
+                        sqlCommand.Append(", ");
+                        ids.Add(xmlToDeleteEnumerator.Current);
+                        //var zmenaXmlId = zmenyXmlToDeleteIds.[i*archiveTpPageSize + j];
+                        //var zmenaXml = new CekajiciTransProtokolZmeny() {Id = zmenaXmlId};
+                        //context.Set<CekajiciTransProtokolZmeny>().Attach(zmenaXml);
+                        //context.Set<CekajiciTransProtokolZmeny>().Remove(zmenaXml);
+
+                    }
+                    sqlCommand.Length--;
+                    sqlCommand.Length--; //odstraneni poslednich ', '
+                    sqlCommand.Append(")");
+                    var array = ids.ToArray();
+                    db.Database.ExecuteSqlCommand(sqlCommand.ToString(), array);
+
+                    if (ids.Count < archiveTpPageSize)
+                    {
+                        break;
+                    }
+                    //context.SaveChanges();
+                }
             }
 
             var batchesProcesed = 0;
@@ -194,7 +214,21 @@ namespace EfInsertBigData
 
         public static byte[] XmlAsBytes(string xml)
         {
-            return Encoding.UTF8.GetBytes(xml);
+            return Encoding.Unicode.GetBytes(xml);
+        }
+
+        public static string ComputeHash(byte[] fileBytes)
+        {
+            using (var sha1 = new System.Security.Cryptography.SHA256Managed())
+            {
+                byte[] hash = sha1.ComputeHash(fileBytes);
+                var formatted = new StringBuilder(2 * hash.Length);
+                foreach (byte b in hash)
+                {
+                    formatted.AppendFormat("{0:X2}", b);
+                }
+                return formatted.ToString();
+            }
         }
     }
 
