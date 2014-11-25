@@ -153,3 +153,4 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+/LuceneNetCzechSupport/packages/Lucene.Net.3.0.3/lib/NET35/Lucene.Net.dll
