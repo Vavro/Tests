@@ -1,0 +1,20 @@
+http://snowball.tartarus.org/otherapps/oregan/intro.html
+
+install mingw (via chocolatey)
+run mingw32-make on snowaball source distribution (https://github.com/snowballstem/snowball)
+add czech stemmer from http://snowball.tartarus.org/otherapps/oregan/intro.html to Snowball\algorithms 
+and add to makefile
+(libstemmer_algorithms = danish dutch english finnish french german hungarian \
+			italian \
+			norwegian porter portuguese romanian \
+			russian spanish swedish turkish \
+      czech_aggresive czech_light
+
+KOI8_R_algorithms = russian
+ISO_8859_1_algorithms = danish dutch english finnish french german italian \
+			norwegian porter portuguese spanish swedish czech_aggresive czech_light
+)
+
+run mingw32-make dist
+java sources found in 
+Snowball\java\org\tartarus\snowball\ext\.
