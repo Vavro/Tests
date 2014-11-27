@@ -5,9 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Aspose.Pdf.Facades;
-using Aspose.Pdf.Text;
-using Aspose.Pdf.Text.TextOptions;
 using FullTextIndexTests.Fulltext;
 using FullTextIndexTests.IFilter;
 

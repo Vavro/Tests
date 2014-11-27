@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
-using Aspose.Pdf;
-using Aspose.Pdf.Generator;
 using FullTextIndexTests.IFilter;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Cz;
