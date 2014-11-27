@@ -13,7 +13,9 @@ namespace LuceneNetCzechSupport.Analyzers
     {
         public static CzechAnalyzer CzechAnalyzer = new CzechAnalyzer(Version.LUCENE_30, CzechAnalyzer.getDefaultStopSet());
 
-        public static CzechSnowballAnalyzer CzechSnowballAnalyzer = new CzechSnowballAnalyzer(Version.LUCENE_30, CzechAnalyzer.getDefaultStopSet());
+        public static CzechAggresiveSnowballAnalyzer CzechAggresiveSnowballAnalyzer = new CzechAggresiveSnowballAnalyzer(Version.LUCENE_30, CzechAnalyzer.getDefaultStopSet());
+
+        public static CzechLightSnowballAnalyzer CzechLightSnowballAnalyzer = new CzechLightSnowballAnalyzer(Version.LUCENE_30, CzechAnalyzer.getDefaultStopSet());
 
         //todo: research KStem filter 
         //todo: research PorterStemFilter
