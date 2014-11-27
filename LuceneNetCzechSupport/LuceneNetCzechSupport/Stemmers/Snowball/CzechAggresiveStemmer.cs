@@ -10,10 +10,10 @@ namespace Snowball.Stemmer
 	/**
 	 * Generated class implementing code defined by a snowball script.
 	 */
-	public class Czech_aggresive : SnowballProgram
+	public class CzechAggresiveStemmer : SnowballProgram
 	{
 
-		public Czech_aggresive()
+		public CzechAggresiveStemmer()
 		{
 			a_0 = new Among[] {
 				new Among("m", -1, -1, "", this),
@@ -252,7 +252,7 @@ namespace Snowball.Stemmer
         private bool B_continue_stemming_noun_suffixes;
         private int I_strlen;
 
-		private void copy_from(Czech_aggresive other) {
+		private void copy_from(CzechAggresiveStemmer other) {
 			B_continue_stemming_noun_suffixes = other.B_continue_stemming_noun_suffixes;
 			I_strlen = other.I_strlen;
 			base.copy_from(other);

@@ -8,16 +8,17 @@ using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Snowball;
 using Lucene.Net.Analysis.Standard;
 using SF.Snowball.Ext;
+using Snowball.Stemmer;
 using Version = Lucene.Net.Util.Version;
 
 namespace LuceneNetCzechSupport.Analyzers
 {
-    public class CzechSnowballAnalyzer : Analyzer
+    public class CzechAggresiveSnowballAnalyzer : Analyzer
     {
         private readonly ISet<string> _stoptable;
         private readonly Version _matchVersion;
 
-        public CzechSnowballAnalyzer(Version matchVersion, ISet<string> stopWords)
+        public CzechAggresiveSnowballAnalyzer(Version matchVersion, ISet<string> stopWords)
         {
             this._stoptable = CharArraySet.UnmodifiableSet(CharArraySet.Copy(stopWords));
             this._matchVersion = matchVersion;
@@ -62,7 +63,7 @@ namespace LuceneNetCzechSupport.Analyzers
                 streams.Result = new LowerCaseFilter(streams.Result);
                 streams.Result = new StopFilter(StopFilter.GetEnablePositionIncrementsVersionDefault(_matchVersion),
                                                 streams.Result, _stoptable);
-                streams.Result = new SnowballFilter(streams.Result, new EnglishStemmer()); //todo: change to czech
+                streams.Result = new SnowballFilter(streams.Result, new CzechAggresiveStemmer());
                 PreviousTokenStream = streams;
             }
             else
