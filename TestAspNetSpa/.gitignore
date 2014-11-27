@@ -1,0 +1,14 @@
+# Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
+!packages/*/build/
+
+#disable packages folder for this project
+packages
+
+#ignore sql databases in the site
+TestAspNetSpa/App_Data/*.mdf
+TestAspNetSpa/App_Data/*.ldf
+
+#ignore bower_component folder
+bower_components
+#ignore node_modules folder
+node_modules
