@@ -2116,7 +2116,7 @@ SFX A   nout        la         [aeiouyαινσϊύωμ]rnout
 SFX A   nout        lo         [aeiouyαινσϊύωμ]rnout
 SFX A   nout        li         [aeiouyαινσϊύωμ]rnout
 SFX A   nout        ly         [aeiouyαινσϊύωμ]rnout
-SFX A   nout        l          [aeiouyαινσϊύωμr][^aeiouyαινσϊύωμrl][^aeiouy
+SFX A   nout        l          [aeiouyαινσϊύωμr][^aeiouyαινσϊύωμrl][^aeiouy]
 SFX A   nout        l          [aeiouyαινσϊύωμr][^aeiouyαινσϊύωμrl]nout
 SFX A   out         ul         [^aeiouyαινσϊύωμ]l[^aeiouyαινσϊύωμrl]nout
 SFX A   nout        l          l[^aeiouyαινσϊύωμrl]nout
