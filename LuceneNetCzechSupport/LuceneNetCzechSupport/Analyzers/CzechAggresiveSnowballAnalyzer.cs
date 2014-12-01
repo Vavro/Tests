@@ -36,6 +36,7 @@ namespace LuceneNetCzechSupport.Analyzers
             result = new StandardFilter(result);
             result = new LowerCaseFilter(result);
             result = new StopFilter(StopFilter.GetEnablePositionIncrementsVersionDefault(_matchVersion), result, _stoptable);
+            result = new SnowballFilter(result, new CzechAggresiveStemmer());
             return result;
         }
 
