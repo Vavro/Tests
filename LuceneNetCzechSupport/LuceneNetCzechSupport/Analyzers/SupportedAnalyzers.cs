@@ -17,6 +17,7 @@ namespace LuceneNetCzechSupport.Analyzers
 
         public static CzechLightSnowballAnalyzer CzechLightSnowballAnalyzer = new CzechLightSnowballAnalyzer(Version.LUCENE_30, CzechAnalyzer.getDefaultStopSet());
 
+        public static CzechHunspellAnalyzer CzechHunspellAnalyzer = new CzechHunspellAnalyzer(Version.LUCENE_30, CzechAnalyzer.getDefaultStopSet());
         //todo: research KStem filter 
         //todo: research PorterStemFilter
         //todo: research HunspellStemmer

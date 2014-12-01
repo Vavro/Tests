@@ -89,17 +89,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analyzers\CzechSnowballAnalyzer.cs" />
+    <Compile Include="Analyzers\CzechAggresiveSnowballAnalyzer.cs" />
+    <Compile Include="Analyzers\CzechHunspellAnalyzer.cs" />
+    <Compile Include="Analyzers\CzechLightSnowballAnalyzer.cs" />
     <Compile Include="Analyzers\SupportedAnalyzers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stemmers\Snowball\CzechAggresiveStemmer.cs" />
     <Compile Include="Stemmers\Snowball\CzechLightStemmer.cs" />
-    <Compile Include="Stemmers\Snowball\CzechStemmerAgressive.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Stemmers\Hunspell\cs_CZ.aff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Stemmers\Hunspell\cs_CZ.dic">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
