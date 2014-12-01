@@ -81,10 +81,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnalyzerTestsBase.cs" />
+    <Compile Include="CzechAggresiveSnowballAnalyzerTests.cs" />
+    <Compile Include="CzechAnalyzerTests.cs" />
+    <Compile Include="CzechHunspellAnalyzerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CzechLightSnowballAnalyzerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LuceneNetCzechSupport\LuceneNetCzechSupport.csproj">
+      <Project>{afbdfab1-b52a-4e21-802e-cf693b387621}</Project>
+      <Name>LuceneNetCzechSupport</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
