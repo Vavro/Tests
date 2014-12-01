@@ -1,11 +1,13 @@
+using System;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Cz;
 using LuceneNetCzechSupport.Analyzers;
 using LuceneNetCzechSupport.Lucene;
+using Xunit;
 
 namespace LuceneNetCzechSupport.Tests
 {
-    public class AnalyzerTestsBase
+    public abstract class AnalyzerTestsBase
     {
         protected FullTextDocument TestFullTextDocument = new FullTextDocument()
                                                          {
@@ -25,5 +27,17 @@ namespace LuceneNetCzechSupport.Tests
         }
 
         protected Fulltext Fulltext { get; private set; }
+
+        [Fact]
+        public void IsAnalyzerWorking()
+        {
+            Fulltext.AddDocToFulltext(TestFullTextDocument);
+
+            var results = Fulltext.SearchIndex(TestFullTextDocumentSearchedText);
+            
+            Assert.NotEmpty(results);
+
+            Console.WriteLine("found id: {0}", results[0]);
+        }
     }
 }

@@ -14,13 +14,5 @@ namespace LuceneNetCzechSupport.Tests
             : base(SupportedAnalyzers.CzechHunspellAnalyzer)
         {
         }
-
-        [Fact]
-        public void IsAnalyzerWorking()
-        {
-            Fulltext.AddDocToFulltext(TestFullTextDocument);
-
-            Fulltext.SearchIndex(TestFullTextDocumentSearchedText);
-        }
     }
 }

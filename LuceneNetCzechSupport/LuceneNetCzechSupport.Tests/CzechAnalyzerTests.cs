@@ -17,14 +17,5 @@ namespace LuceneNetCzechSupport.Tests
             : base(SupportedAnalyzers.CzechAnalyzer)
         {
         }
-
-        [Fact]
-        public void IsAnalyzerWorking()
-        {
-            var doc = TestFullTextDocument;
-            Fulltext.AddDocToFulltext(doc);
-
-            Fulltext.SearchIndex("Testovací");
-        }
     }
 }

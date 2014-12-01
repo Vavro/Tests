@@ -14,13 +14,5 @@ namespace LuceneNetCzechSupport.Tests
         public CzechLightSnowballAnalyzerTests() : base(SupportedAnalyzers.CzechLightSnowballAnalyzer)
         {
         }
-
-        [Fact]
-        public void IsAnalyzerWorking()
-        {
-            Fulltext.AddDocToFulltext(TestFullTextDocument);
-
-            Fulltext.SearchIndex(TestFullTextDocumentSearchedText);
-        }
     }
 }
