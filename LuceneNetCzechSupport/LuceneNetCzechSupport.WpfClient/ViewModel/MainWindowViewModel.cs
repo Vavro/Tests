@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
+using GalaSoft.MvvmLight.CommandWpf;
 using Lucene.Net.Analysis;
 using LuceneNetCzechSupport.Analyzers;
-using LuceneNetCzechSupport.WpfClient.Helpers;
+using Microsoft.Win32;
 
-namespace LuceneNetCzechSupport.WpfClient
+namespace LuceneNetCzechSupport.WpfClient.ViewModel
 {
     public class MainWindowViewModel
     {
@@ -22,7 +20,14 @@ namespace LuceneNetCzechSupport.WpfClient
 
             AwailibleAnalyzers = supportedAnalyzers.Select(a => new AnalyzerViewModel(a)).ToList();
 
-            OpenFileCommand = new DelegateCommand
+            OpenFileCommand = new RelayCommand(OpenFileExecute);
+        }
+
+        private void OpenFileExecute()
+        {
+            var openFileDialog = new OpenFileDialog();
+            openFileDialog.ShowDialog();
+            openFileDialog.OpenFile();
         }
 
         public string FileName
