@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3670CD
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuceneNetCzechSupport.WpfClient", "LuceneNetCzechSupport.WpfClient\LuceneNetCzechSupport.WpfClient.csproj", "{7AF804C9-B6B0-44FD-8EB9-590D14A25581}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{5A3AF9DE-7CAD-4B69-91FF-46AA868706EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A3AF9DE-7CAD-4B69-91FF-46AA868706EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A3AF9DE-7CAD-4B69-91FF-46AA868706EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AF804C9-B6B0-44FD-8EB9-590D14A25581}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AF804C9-B6B0-44FD-8EB9-590D14A25581}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AF804C9-B6B0-44FD-8EB9-590D14A25581}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AF804C9-B6B0-44FD-8EB9-590D14A25581}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
