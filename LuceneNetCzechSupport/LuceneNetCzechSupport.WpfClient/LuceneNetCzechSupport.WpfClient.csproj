@@ -116,6 +116,7 @@
     <Compile Include="Helpers\FileHelpers.cs" />
     <Compile Include="IFilter\Native.cs" />
     <Compile Include="IFilter\ParseHelper.cs" />
+    <Compile Include="Services\DialogService.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -165,9 +166,7 @@
       <Name>LuceneNetCzechSupport</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

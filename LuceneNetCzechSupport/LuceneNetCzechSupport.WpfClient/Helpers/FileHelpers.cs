@@ -12,7 +12,7 @@ namespace LuceneNetCzechSupport.WpfClient.Helpers
         public static bool IsDirectory(string fileName)
         {
             var attr = File.GetAttributes(fileName);
-            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+            if (attr.HasFlag(FileAttributes.Directory))
             {
                 return true;
             }

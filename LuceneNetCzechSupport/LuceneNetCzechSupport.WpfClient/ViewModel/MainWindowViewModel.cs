@@ -20,6 +20,9 @@ using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace LuceneNetCzechSupport.WpfClient.ViewModel
 {
+    //todo: add indexed terms
+    //todo: add compare between all analyzers
+    //todo: add search in all analyzers
     public class MainWindowViewModel : ViewModelBase
     {
         private string _fileName;
@@ -85,27 +88,27 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
 
         private void AddToIndex(FileInfo file)
         {
-            using (var fileStream = new FileStream(file.FullName, FileMode.Open))
+            try
             {
-                if (false)
+                using (var fileStream = new FileStream(file.FullName, FileMode.Open))
                 {
-                    var dialogService = SimpleIoc.Default.GetInstance<IDialogService>();
-                    dialogService.ShowMessage(
-                        String.Format("Could find a suitable IFilter for file {0}", file.FullName),
-                        "Could not open file");
-                    return;
-                }
+                    var fileText = ParseHelper.ParseIFilter(fileStream, file.FullName);
 
-                var fileText = ParseHelper.ParseIFilter(fileStream, file.FullName);
-
-                Fulltext.AddDocToFulltext(new FullTextDocument()
-                                          {
-                                              FileFulltextInfo =
+                    Fulltext.AddDocToFulltext(new FullTextDocument()
                                               {
-                                                  FileName = file.FullName, FileText = fileText
-                                              }, 
-                                              Id = file.FullName
-                                          });
+                                                  FileFulltextInfo =
+                                                  {
+                                                      FileName = file.FullName,
+                                                      FileText = fileText
+                                                  },
+                                                  Id = file.FullName
+                                              });
+                }
+            }
+            catch (Exception e)
+            {
+                //var dialogService = SimpleIoc.Default.GetInstance<IDialogService>();
+                //dialogService.ShowError(e, String.Format("Couldn't index file {0}", file.FullName), "OK", null);
             }
         }
 
@@ -174,7 +177,7 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
             get { return _searchResult; }
             set
             {
-                _searchResult = value; 
+                _searchResult = value;
                 RaisePropertyChanged(() => SearchResult);
             }
         }
