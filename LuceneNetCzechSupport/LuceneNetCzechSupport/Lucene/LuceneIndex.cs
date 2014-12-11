@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Lucene.Net.Analysis;
@@ -80,6 +81,15 @@ namespace LuceneNetCzechSupport.Lucene
             doc.Add(new Field(FieldNames.FileText, text, Field.Store.NO, Field.Index.ANALYZED));
 
             return doc;
+        }
+
+        public void Clear()
+        {
+            using (var w = new IndexWriter(Index,Analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED))
+            {
+                w.DeleteAll();
+                w.Optimize();
+            }
         }
     }
 }

@@ -35,6 +35,13 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
             IndexSelectedDocumentsCommand = new RelayCommand(IndexSelectedDocumentsExecute, IndexSelectedDocumentsCanExecute);
 
             SearchCommand = new RelayCommand(SearchExecute);
+
+            ClearIndexedDocumentsCommand = new RelayCommand(ClearIndexedDocumentsExecute);
+        }
+
+        private void ClearIndexedDocumentsExecute()
+        {
+            SupportedCzechIndexes.ClearIndexes();
         }
 
         private void SearchExecute()
@@ -248,6 +255,11 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
                                                 Console.WriteLine(e);
                                             }
                                         });
+        }
+
+        public void ClearIndexes()
+        {
+            _supportedFulltexts.ForEach(fulltext => fulltext.Clear());
         }
     }
 

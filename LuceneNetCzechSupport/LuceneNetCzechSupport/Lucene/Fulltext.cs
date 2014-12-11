@@ -54,5 +54,9 @@ namespace LuceneNetCzechSupport.Lucene
         }
 
 
+        public void Clear()
+        {
+            _indexer.Clear();
+        }
     }
 }
