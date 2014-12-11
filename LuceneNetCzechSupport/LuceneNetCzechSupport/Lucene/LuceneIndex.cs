@@ -51,14 +51,13 @@ namespace LuceneNetCzechSupport.Lucene
         public readonly Directory Index;
 
 
-        //todo: add better czech analyzer with stemming
         public Analyzer Analyzer { get; private set; }
 
         public void AddDocument(Document doc)
         {
 
             //todo: use indexwriter for longer than one write
-            using (var w = new IndexWriter(Index, Analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED))
+            using (var w = new IndexWriter(Index, Analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED))
             {
                 w.AddDocument(doc);
                 w.Optimize();
