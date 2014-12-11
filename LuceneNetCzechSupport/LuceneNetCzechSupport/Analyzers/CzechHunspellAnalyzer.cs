@@ -57,7 +57,6 @@ namespace LuceneNetCzechSupport.Analyzers
                 streams.Result = new LowerCaseFilter(streams.Result);
                 streams.Result = new StopFilter(StopFilter.GetEnablePositionIncrementsVersionDefault(_matchVersion),
                                                 streams.Result, _stoptable);
-                streams.Result = new SnowballFilter(streams.Result, new CzechAggresiveStemmer());
                 streams.Result = new HunspellStemFilter(streams.Result, new HunspellDictionary(File.OpenRead("Stemmers/Hunspell/cs_CZ.aff"), File.OpenRead("Stemmers/Hunspell/cs_CZ.dic")));
                 PreviousTokenStream = streams;
             }

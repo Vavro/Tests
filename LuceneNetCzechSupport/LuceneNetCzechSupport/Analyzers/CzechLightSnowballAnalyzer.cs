@@ -64,7 +64,7 @@ namespace LuceneNetCzechSupport.Analyzers
                 streams.Result = new LowerCaseFilter(streams.Result);
                 streams.Result = new StopFilter(StopFilter.GetEnablePositionIncrementsVersionDefault(_matchVersion),
                                                 streams.Result, _stoptable);
-                streams.Result = new SnowballFilter(streams.Result, new CzechAggresiveStemmer());
+                streams.Result = new SnowballFilter(streams.Result, new CzechLightStemmer());
                 PreviousTokenStream = streams;
             }
             else
