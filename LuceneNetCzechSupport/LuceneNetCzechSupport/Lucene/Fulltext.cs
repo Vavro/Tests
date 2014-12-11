@@ -17,7 +17,7 @@ namespace LuceneNetCzechSupport.Lucene
 
         public Fulltext(Analyzer analyzer)
         {
-            _indexer = new LuceneIndexer(analyzer);
+            _indexer = new LuceneIndexer(analyzer, "index_" + analyzer.GetType().Name);
         }
 
         public void AddDocToFulltext(FullTextDocument insertedDocument)

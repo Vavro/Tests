@@ -19,8 +19,14 @@ namespace LuceneNetCzechSupport.Lucene
     {
         private class LuceneIndexDir
         {
-            private string _luceneDir = "lucene_index";
+            private readonly string _luceneDir;
             private FSDirectory _directoryTemp;
+
+            public LuceneIndexDir(string directoryName)
+            {
+                _luceneDir = directoryName;
+            }
+
             public FSDirectory Directory
             {
                 get
@@ -40,10 +46,10 @@ namespace LuceneNetCzechSupport.Lucene
             public const string Id = "Id";
         }
 
-        public LuceneIndexer(Analyzer analyzer)
+        public LuceneIndexer(Analyzer analyzer, string directoryName)
         {
             Analyzer = analyzer;
-            var luceneDir = new LuceneIndexDir();
+            var luceneDir = new LuceneIndexDir(directoryName);
             Index = luceneDir.Directory;
         }
         public const int MaxResults = 1000;
@@ -57,7 +63,7 @@ namespace LuceneNetCzechSupport.Lucene
         {
 
             //todo: use indexwriter for longer than one write
-            using (var w = new IndexWriter(Index, Analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED))
+            using (var w = new IndexWriter(Index, Analyzer, IndexWriter.MaxFieldLength.UNLIMITED))
             {
                 w.AddDocument(doc);
                 w.Optimize();

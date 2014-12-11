@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:wpfClient="clr-namespace:LuceneNetCzechSupport.WpfClient"
         xmlns:viewModel="clr-namespace:LuceneNetCzechSupport.WpfClient.ViewModel"
-        Title="MainWindow" Height="350" Width="525"
+        Title="MainWindow" Height="900" Width="1600"
         DataContext="{Binding Main, Source={StaticResource Locator}}">
     <Grid>
         <Grid.RowDefinitions>
@@ -26,12 +26,9 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <ComboBox Grid.Column="0" Margin="5,5,5,5" ItemsSource="{Binding AwailibleAnalyzers, Mode=OneWay}" SelectedItem="{Binding SelectedAnalyzer, Mode=OneWayToSource}" DisplayMemberPath="Name">
-            </ComboBox>
-            <Button Grid.Column="1" Margin="5,5,5,5" Command="{Binding IndexSelectedDocumentsCommand}">Index Selected Documents</Button>
-            <Button Grid.Column="2" Margin="5,5,5,5" Command="{Binding ClearIndexedDocumentsCommand}">Clear Indexed Documents</Button>
+            <Button Grid.Column="0" Margin="5,5,5,5" Command="{Binding IndexSelectedDocumentsCommand}">Index Selected Documents</Button>
+            <Button Grid.Column="1" Margin="5,5,5,5" Command="{Binding ClearIndexedDocumentsCommand}">Clear Indexed Documents</Button>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
@@ -43,15 +40,69 @@
             <Button Grid.Column="1" Margin="5,5,5,5" Command="{Binding SearchCommand}">Search</Button>
         </Grid>
 
-        <TextBox Grid.Row="3" 
-                 TextWrapping="Wrap" 
-                 AcceptsReturn="True" 
-                 IsReadOnly="True" 
-                 Margin="5,5,5,5" 
-                 Height="Auto" 
-                 Width="Auto" 
-                 Text="{Binding SearchResult}">
-        </TextBox>
-
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" 
+                       Margin="5,5,5,5" 
+                       Text="Search Results Czech">
+            </TextBlock>
+            <TextBox Grid.Row="1" Grid.Column="0"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     IsReadOnly="True"
+                     Margin="5,5,5,5"
+                     Height="Auto"
+                     Width="Auto"
+                     Text="{Binding SearchResultCzech}">
+            </TextBox>
+            <TextBlock Grid.Row="0" Grid.Column="1" 
+                       Margin="5,5,5,5" 
+                       Text="Search Results Czech Aggressive Snowball">
+            </TextBlock>
+            <TextBox Grid.Row="1" Grid.Column="1"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     IsReadOnly="True"
+                     Margin="5,5,5,5"
+                     Height="Auto"
+                     Width="Auto"
+                     Text="{Binding SearchResultCzechAggressiveSnowball}">
+            </TextBox>
+            <TextBlock Grid.Row="0" Grid.Column="2" 
+                       Margin="5,5,5,5" 
+                       Text="Search Results Czech Light Snowball">
+            </TextBlock>
+            <TextBox Grid.Row="1" Grid.Column="2"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     IsReadOnly="True"
+                     Margin="5,5,5,5"
+                     Height="Auto"
+                     Width="Auto"
+                     Text="{Binding SearchResultCzechLightSnowball}">
+            </TextBox>
+            <TextBlock Grid.Row="0" Grid.Column="3" 
+                       Margin="5,5,5,5" 
+                       Text="Search Results Czech Hunspell">
+            </TextBlock>
+            <TextBox Grid.Row="1" Grid.Column="3"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     IsReadOnly="True"
+                     Margin="5,5,5,5"
+                     Height="Auto"
+                     Width="Auto"
+                     Text="{Binding SearchResultCzechHunspell}">
+            </TextBox>
+        </Grid>
     </Grid>
 </Window>

@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Ioc;
-using GalaSoft.MvvmLight.Views;
-using IFilterReader;
 using Lucene.Net.Analysis;
 using LuceneNetCzechSupport.Analyzers;
 using LuceneNetCzechSupport.Lucene;
@@ -26,18 +21,14 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
     public class MainWindowViewModel : ViewModelBase
     {
         private string _fileName;
-        private AnalyzerViewModel _selectedAnalyzer;
-        private string _searchResult;
+        private string _searchResultCzech;
+        private string _searchResultCzechAggressiveSnowball;
+        private string _searchResultCzechLightSnowball;
+        private string _searchResultCzechHunspell;
 
         public MainWindowViewModel()
         {
-            var supportedAnalyzers = new Analyzer[] { 
-                SupportedAnalyzers.CzechAnalyzer, 
-                SupportedAnalyzers.CzechLightSnowballAnalyzer, 
-                SupportedAnalyzers.CzechAggresiveSnowballAnalyzer, 
-                SupportedAnalyzers.CzechHunspellAnalyzer };
-
-            AwailibleAnalyzers = supportedAnalyzers.Select(a => new AnalyzerViewModel(a)).ToList();
+            SupportedCzechIndexes = new SupportedCzechIndexes();
 
             OpenFileCommand = new RelayCommand(OpenFileExecute);
             OpenDirectoryCommand = new RelayCommand(OpenDirectoryExecute);
@@ -48,7 +39,16 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
 
         private void SearchExecute()
         {
-            var results = Fulltext.SearchIndex(SearchText);
+            SearchOn(SupportedCzechIndexes.CzechFulltext, result => SearchResultCzech = result);
+            SearchOn(SupportedCzechIndexes.CzechAggressiveSnowballFulltext, result => SearchResultCzechAggressiveSnowball = result);
+            SearchOn(SupportedCzechIndexes.CzechLightSnowballFulltext, result => SearchResultCzechLightSnowball = result);
+            SearchOn(SupportedCzechIndexes.CzechHunspellFulltext, result => SearchResultCzechHunspell = result);
+        }
+
+        private void SearchOn(Fulltext fulltext, Action<string> writeOutputFunc)
+        {
+
+            var results = fulltext.SearchIndex(SearchText);
 
             var searchResult = new StringBuilder();
             foreach (var result in results)
@@ -57,19 +57,17 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
                 searchResult.Append(result);
                 searchResult.AppendLine();
             }
-            SearchResult = searchResult.ToString();
+
+            writeOutputFunc(searchResult.ToString());
         }
 
         private bool IndexSelectedDocumentsCanExecute()
         {
-            return SelectedAnalyzer != null;
+            return true;
         }
 
         private void IndexSelectedDocumentsExecute()
         {
-            if (SelectedAnalyzer == null)
-                return;
-
             if (FileHelpers.IsDirectory(FileName))
             {
                 var directory = new DirectoryInfo(FileName);
@@ -94,7 +92,7 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
                 {
                     var fileText = ParseHelper.ParseIFilter(fileStream, file.FullName);
 
-                    Fulltext.AddDocToFulltext(new FullTextDocument()
+                    SupportedCzechIndexes.AddDocToFulltext(new FullTextDocument()
                                               {
                                                   FileFulltextInfo =
                                                   {
@@ -171,43 +169,86 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
             get;
             set;
         }
-
-        public string SearchResult
-        {
-            get { return _searchResult; }
-            set
-            {
-                _searchResult = value;
-                RaisePropertyChanged(() => SearchResult);
-            }
-        }
-
+        
         public RelayCommand IndexSelectedDocumentsCommand { get; set; }
 
-        public AnalyzerViewModel SelectedAnalyzer
+        public SupportedCzechIndexes SupportedCzechIndexes { get; private set; }
+
+        public string SearchResultCzech
         {
-            get { return _selectedAnalyzer; }
+            get { return _searchResultCzech; }
             set
             {
-                //todo: add notification that current fulltext index get discarded
-                _selectedAnalyzer = value;
-                RaisePropertyChanged(() => SelectedAnalyzer);
-                InitFulltext();
-                IndexSelectedDocumentsCommand.RaiseCanExecuteChanged();
+                _searchResultCzech = value;
+                RaisePropertyChanged(() => SearchResultCzech);
             }
         }
 
-        private void InitFulltext()
+        public string SearchResultCzechAggressiveSnowball
         {
-            if (SelectedAnalyzer != null)
+            get { return _searchResultCzechAggressiveSnowball; }
+            set
             {
-                Fulltext = new Fulltext(SelectedAnalyzer.Analyzer);
+                _searchResultCzechAggressiveSnowball = value;
+                RaisePropertyChanged(() => SearchResultCzechAggressiveSnowball);
             }
         }
 
-        public Fulltext Fulltext { get; set; }
+        public string SearchResultCzechLightSnowball
+        {
+            get { return _searchResultCzechLightSnowball; }
+            set
+            {
+                _searchResultCzechLightSnowball = value;
+                RaisePropertyChanged(() => SearchResultCzechLightSnowball);
+            }
+        }
 
-        public List<AnalyzerViewModel> AwailibleAnalyzers { get; set; }
+        public string SearchResultCzechHunspell
+        {
+            get { return _searchResultCzechHunspell; }
+            set
+            {
+                _searchResultCzechHunspell = value;
+                RaisePropertyChanged(() => SearchResultCzechHunspell);
+            }
+        }
+    }
+
+    public class SupportedCzechIndexes
+    {
+        public SupportedCzechIndexes()
+        {
+            var czechFulltext = new Fulltext(SupportedAnalyzers.CzechAnalyzer);
+            var czechAggressiveSnowballFulltext = new Fulltext(SupportedAnalyzers.CzechAggresiveSnowballAnalyzer);
+            var czechLightSnowballFulltext = new Fulltext(SupportedAnalyzers.CzechLightSnowballAnalyzer);
+            var czechHunspellFulltext = new Fulltext(SupportedAnalyzers.CzechHunspellAnalyzer);
+
+            _supportedFulltexts = new List<Fulltext>() { czechFulltext, czechAggressiveSnowballFulltext, czechLightSnowballFulltext, czechHunspellFulltext };
+        }
+
+        private readonly List<Fulltext> _supportedFulltexts;
+
+        public Fulltext CzechFulltext { get { return _supportedFulltexts[0]; } }
+        public Fulltext CzechAggressiveSnowballFulltext { get { return _supportedFulltexts[1]; } }
+        public Fulltext CzechLightSnowballFulltext { get { return _supportedFulltexts[2]; } }
+        public Fulltext CzechHunspellFulltext { get { return _supportedFulltexts[3]; } }
+        public IReadOnlyList<Fulltext> SupportedFulltexts { get { return _supportedFulltexts.AsReadOnly(); } }
+
+        public void AddDocToFulltext(FullTextDocument insertedDocument)
+        {
+            _supportedFulltexts.ForEach(fulltext =>
+                                        {
+                                            try
+                                            {
+                                                fulltext.AddDocToFulltext(insertedDocument);
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                Console.WriteLine(e);
+                                            }
+                                        });
+        }
     }
 
     public class AnalyzerViewModel

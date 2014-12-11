@@ -9,5 +9,18 @@ namespace LuceneNetCzechSupport.Lucene
 
         public string Id { get; set; }
         public FileFulltextInfo FileFulltextInfo { get; set; }
+
+        public FullTextDocument Copy()
+        {
+            return new FullTextDocument()
+            {
+                Id = this.Id,
+                FileFulltextInfo = new FileFulltextInfo()
+                                   {
+                                       FileName = this.FileFulltextInfo.FileName,
+                                       FileText = this.FileFulltextInfo.FileText
+                                   }
+            };
+        }
     }
 }
