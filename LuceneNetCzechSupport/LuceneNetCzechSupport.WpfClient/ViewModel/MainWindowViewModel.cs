@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -52,10 +53,11 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
             SearchOn(SupportedCzechIndexes.CzechHunspellFulltext, result => SearchResultCzechHunspell = result);
         }
 
-        private void SearchOn(Fulltext fulltext, Action<string> writeOutputFunc)
+        private void SearchOn(FulltextViewModel fulltext, Action<string> writeOutputFunc)
         {
-
-            var results = fulltext.SearchIndex(SearchText);
+            var results = fulltext.Fulltext.SearchIndex(SearchText);
+         
+            fulltext.Statistics.LastSearchTime = fulltext.Fulltext.Stats.LastSearchTime;
 
             var searchResult = new StringBuilder();
             foreach (var result in results)
@@ -222,25 +224,43 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
         }
     }
 
+    public class Statistics : ObservableObject
+    {
+        private TimeSpan _lastIndexingTime;
+        private TimeSpan _lastSearchTime;
+
+        public TimeSpan LastIndexingTime
+        {
+            get { return _lastIndexingTime; }
+            set { _lastIndexingTime = value; RaisePropertyChanged(() => LastIndexingTime);}
+        }
+
+        public TimeSpan LastSearchTime
+        {
+            get { return _lastSearchTime; }
+            set { _lastSearchTime = value; RaisePropertyChanged(() => LastSearchTime);}
+        }
+    }
+
     public class SupportedCzechIndexes
     {
         public SupportedCzechIndexes()
         {
-            var czechFulltext = new Fulltext(SupportedAnalyzers.CzechAnalyzer);
-            var czechAggressiveSnowballFulltext = new Fulltext(SupportedAnalyzers.CzechAggresiveSnowballAnalyzer);
-            var czechLightSnowballFulltext = new Fulltext(SupportedAnalyzers.CzechLightSnowballAnalyzer);
-            var czechHunspellFulltext = new Fulltext(SupportedAnalyzers.CzechHunspellAnalyzer);
+            var czechFulltext = new FulltextViewModel(new Fulltext(SupportedAnalyzers.CzechAnalyzer));
+            var czechAggressiveSnowballFulltext = new FulltextViewModel(new Fulltext(SupportedAnalyzers.CzechAggresiveSnowballAnalyzer));
+            var czechLightSnowballFulltext = new FulltextViewModel(new Fulltext(SupportedAnalyzers.CzechLightSnowballAnalyzer));
+            var czechHunspellFulltext = new FulltextViewModel(new Fulltext(SupportedAnalyzers.CzechHunspellAnalyzer));
 
-            _supportedFulltexts = new List<Fulltext>() { czechFulltext, czechAggressiveSnowballFulltext, czechLightSnowballFulltext, czechHunspellFulltext };
+            _supportedFulltexts = new List<FulltextViewModel>() { czechFulltext, czechAggressiveSnowballFulltext, czechLightSnowballFulltext, czechHunspellFulltext };
         }
 
-        private readonly List<Fulltext> _supportedFulltexts;
+        private readonly List<FulltextViewModel> _supportedFulltexts;
 
-        public Fulltext CzechFulltext { get { return _supportedFulltexts[0]; } }
-        public Fulltext CzechAggressiveSnowballFulltext { get { return _supportedFulltexts[1]; } }
-        public Fulltext CzechLightSnowballFulltext { get { return _supportedFulltexts[2]; } }
-        public Fulltext CzechHunspellFulltext { get { return _supportedFulltexts[3]; } }
-        public IReadOnlyList<Fulltext> SupportedFulltexts { get { return _supportedFulltexts.AsReadOnly(); } }
+        public FulltextViewModel CzechFulltext { get { return _supportedFulltexts[0]; } }
+        public FulltextViewModel CzechAggressiveSnowballFulltext { get { return _supportedFulltexts[1]; } }
+        public FulltextViewModel CzechLightSnowballFulltext { get { return _supportedFulltexts[2]; } }
+        public FulltextViewModel CzechHunspellFulltext { get { return _supportedFulltexts[3]; } }
+        public IReadOnlyList<FulltextViewModel> SupportedFulltexts { get { return _supportedFulltexts.AsReadOnly(); } }
 
         public void AddDocToFulltext(FullTextDocument insertedDocument)
         {
@@ -248,7 +268,8 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
                                         {
                                             try
                                             {
-                                                fulltext.AddDocToFulltext(insertedDocument);
+                                                fulltext.Fulltext.AddDocToFulltext(insertedDocument);
+                                                fulltext.Statistics.LastIndexingTime = fulltext.Fulltext.Stats.LastIndexingTime;
                                             }
                                             catch (Exception e)
                                             {
@@ -259,7 +280,7 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
 
         public void ClearIndexes()
         {
-            _supportedFulltexts.ForEach(fulltext => fulltext.Clear());
+            _supportedFulltexts.ForEach(fulltext => fulltext.Fulltext.Clear());
         }
     }
 
@@ -279,5 +300,19 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
                 return Analyzer != null ? Analyzer.ToString() : null;
             }
         }
+    }
+
+    public class FulltextViewModel
+    {
+        public FulltextViewModel(Fulltext fulltext)
+        {
+            Fulltext = fulltext;
+            Statistics = new Statistics();
+        }
+
+        public Fulltext Fulltext { get; private set; }
+        public Statistics Statistics
+        {
+            get; private set; }
     }
 }

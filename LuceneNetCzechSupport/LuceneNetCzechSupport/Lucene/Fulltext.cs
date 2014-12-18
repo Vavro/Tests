@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,23 +14,47 @@ namespace LuceneNetCzechSupport.Lucene
 {
     public class Fulltext
     {
+        public class Statistics
+        {
+            public Statistics()
+            {
+                LastIndexingTime = new TimeSpan();
+                LastSearchTime = new TimeSpan();
+            }
+
+            public TimeSpan LastIndexingTime { get; set; }
+            public TimeSpan LastSearchTime { get; set; }
+        }
+
         private readonly LuceneIndexer _indexer;
 
         public Fulltext(Analyzer analyzer)
         {
             _indexer = new LuceneIndexer(analyzer, "index_" + analyzer.GetType().Name);
+            Stats = new Statistics();
         }
+
+        public Statistics Stats { get; private set; }
 
         public void AddDocToFulltext(FullTextDocument insertedDocument)
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             var doc = LuceneIndexer.CreateDocument(insertedDocument);
            
             _indexer.AddDocument(doc);
+
+            stopwatch.Stop();
+            Stats.LastIndexingTime = stopwatch.Elapsed;
         }
 
         //todo: return type
         public List<string> SearchIndex(string searchedText)
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             Console.WriteLine("Searching text: {0}", searchedText);
             var queryParser = new QueryParser(Version.LUCENE_30, LuceneIndexer.FieldNames.FileText, _indexer.Analyzer);
             var fullTextQuery = queryParser.Parse(searchedText);
@@ -49,6 +74,9 @@ namespace LuceneNetCzechSupport.Lucene
                 Console.WriteLine("id: {0}", id);
                 resultIds.Add(id);
             }
+
+            stopwatch.Stop();
+            Stats.LastSearchTime = stopwatch.Elapsed;
 
             return resultIds;
         }
