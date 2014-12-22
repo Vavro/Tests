@@ -55,7 +55,7 @@ namespace LuceneNetCzechSupport.Lucene
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            Console.WriteLine("Searching text: {0}", searchedText);
+            //Console.WriteLine("Searching text: {0}", searchedText);
             var queryParser = new QueryParser(Version.LUCENE_30, LuceneIndexer.FieldNames.FileText, _indexer.Analyzer);
             var fullTextQuery = queryParser.Parse(searchedText);
 
@@ -71,7 +71,7 @@ namespace LuceneNetCzechSupport.Lucene
                 
                 var id = doc.Get(LuceneIndexer.FieldNames.Id);
 
-                Console.WriteLine("id: {0}", id);
+                //Console.WriteLine("id: {0}", id);
                 resultIds.Add(id);
             }
 
