@@ -35,7 +35,7 @@ namespace LuceneNetCzechSupport.Tests
 
         protected Fulltext Fulltext { get; private set; }
 
-        [Fact]
+        [Fact, Trait("Category", "Basic"), Trait("Priority", "Highest")]
         public void IsAnalyzerWorking()
         {
             Fulltext.AddDocToFulltext(TestFullTextDocument);
@@ -47,7 +47,7 @@ namespace LuceneNetCzechSupport.Tests
             Console.WriteLine("found id: {0}", results[0]);
         }
 
-        [Fact]
+        [Fact, Trait("Category","Long Running")]
         public void CanIndexAndRetrieveAllCzechWords()
         {
             var czechStopWords = new HashSet<string>(CzechAnalyzer.CZECH_STOP_WORDS);
