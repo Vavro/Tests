@@ -8,6 +8,7 @@ using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Cz;
 using LuceneNetCzechSupport.Analyzers;
 using LuceneNetCzechSupport.Lucene;
+using LuceneNetCzechSupport.Tests.Extensions;
 using Xunit;
 
 namespace LuceneNetCzechSupport.Tests
@@ -20,7 +21,7 @@ namespace LuceneNetCzechSupport.Tests
                                                              FileFulltextInfo =
                                                              {
                                                                  FileName = "TestFileName",
-                                                                 FileText = "Testovací text"
+                                                                 FileTextReader = "Testovací text".AsStreamReader()
                                                              }
                                                          };
 
@@ -53,14 +54,14 @@ namespace LuceneNetCzechSupport.Tests
 
             using (var reader = File.OpenText(@"TestFiles\Czech.3-2-3.txt"))
             {
-                var text = reader.ReadToEnd();
+                var text = reader;
 
                 var doc = new FullTextDocument()
                           {
                               Id = @"TestFiles\Czech.3-2-3.txt", 
                               FileFulltextInfo =
                               {
-                                  FileName = "Czech.3-2-3.txt", FileText = text
+                                  FileName = "Czech.3-2-3.txt", FileTextReader = text
                               }
                           };
 

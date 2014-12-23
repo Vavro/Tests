@@ -106,7 +106,8 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
                                                   FileFulltextInfo =
                                                   {
                                                       FileName = file.FullName,
-                                                      FileText = fileText
+                                                      //todo: IFilterReader - TextReader over IFilter
+                                                      FileTextReader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(fileText)), Encoding.UTF8)
                                                   },
                                                   Id = file.FullName
                                               });

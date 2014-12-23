@@ -18,7 +18,7 @@ namespace LuceneNetCzechSupport.Lucene
                 FileFulltextInfo = new FileFulltextInfo()
                                    {
                                        FileName = this.FileFulltextInfo.FileName,
-                                       FileText = this.FileFulltextInfo.FileText
+                                       FileTextReader = this.FileFulltextInfo.FileTextReader
                                    }
             };
         }

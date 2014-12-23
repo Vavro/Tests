@@ -133,4 +133,8 @@ namespace LuceneNetCzechSupport.WpfClient.IFilter
             return sb.ToString();
         }
     }
+
+    public class IFilterStreamReader : TextReader
+    {
+    }
 }
