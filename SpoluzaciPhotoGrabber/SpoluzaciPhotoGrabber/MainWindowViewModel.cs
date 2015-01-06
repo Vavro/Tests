@@ -9,6 +9,7 @@ using System.Security.RightsManagement;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using System.Windows.Threading;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using HtmlAgilityPack;
@@ -38,7 +39,7 @@ namespace SpoluzaciPhotoGrabber
         protected override void RaisePropertyChanged(string propertyName = null)
         {
             base.RaisePropertyChanged(propertyName);
-            
+
             var handler = this.PropertyChangedHandler;
             switch (propertyName)
             {
@@ -54,35 +55,55 @@ namespace SpoluzaciPhotoGrabber
         //todo: move to background thread
         private void GrabImageCommandExecute()
         {
-            //var lines = SourceLinks.Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
-
-            var lines = new List<string>();
-            lines.Add("test1.txt");
-            lines.Add("test2.txt");
-
-            var client = new WebClient();
-
-
-            foreach (var line in lines)
+            Task.Run(() =>
             {
-                CurrentItem = 0;
-                CurrentLink = line;
-                var doc = new HtmlDocument();
-                doc.Load(line);
+                //var lines = SourceLinks.Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
 
-                var imageLinks = doc.DocumentNode.SelectNodes("//a[@href][@class='photoImage']").Select(a => a.Attributes["href"].Value).ToList();
+                var lines = new List<Tuple<string, string>>();
+                lines.Add(new Tuple<string, string>("test1.txt", "Konryho narozky 07"));
+                lines.Add(new Tuple<string, string>("test2.txt", "Maturak 07"));
+                lines.Add(new Tuple<string, string>("test3.txt", "Voda se Sýsou 06"));
+                lines.Add(new Tuple<string, string>("test4.txt", "Voda se třídou 06"));
+                lines.Add(new Tuple<string, string>("test5.txt", "Vochyho 19 07"));
+                lines.Add(new Tuple<string, string>("test6.txt", "Weidenberg 11 06"));
 
-                CurrentLinkTotalItems = imageLinks.Count;
 
-                foreach (var imageLink in imageLinks)
+                var client = new WebClient();
+
+                foreach (var line in lines)
                 {
-                    client.DownloadFile(imageLink, Path.Combine(TargetDirectory, Path.GetFileName(imageLink)));
+                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    {
+                        CurrentItem = 0;
+                        CurrentLink = line.Item1;
+                    });
 
-                    CurrentItem++;
+                    var doc = new HtmlDocument();
+                    doc.Load(CurrentLink);
+
+                    var imageLinks = doc.DocumentNode.SelectNodes("//a[@href][@class='photoImage']").Select(a => a.Attributes["href"].Value).ToList();
+
+                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    {
+                        CurrentLinkTotalItems = imageLinks.Count;
+                    });
+
+                    var path = Path.Combine(TargetDirectory, line.Item2);
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    foreach (var imageLink in imageLinks)
+                    {
+                        client.DownloadFile(imageLink, Path.Combine(path, Path.GetFileName(imageLink)));
+
+                        Dispatcher.CurrentDispatcher.Invoke(() => { CurrentItem++; });
+                    }
                 }
-            }
 
-            CurrentLink = "Complete";
+                CurrentLink = "Complete";
+            });
         }
 
         public string TargetDirectory { get; set; }
@@ -114,5 +135,5 @@ namespace SpoluzaciPhotoGrabber
             get { return String.Format("{0} {1}/{2}", CurrentLink, CurrentItem, CurrentLinkTotalItems); }
         }
     }
-    
+
 }
