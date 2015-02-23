@@ -7,6 +7,7 @@ using System.Text;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Cz;
 using LuceneNetCzechSupport.Analyzers;
+using LuceneNetCzechSupport.IFilter;
 using LuceneNetCzechSupport.Lucene;
 using LuceneNetCzechSupport.Tests.Extensions;
 using Xunit;
@@ -45,6 +46,24 @@ namespace LuceneNetCzechSupport.Tests
             Assert.NotEmpty(results);
 
             Console.WriteLine("found id: {0}", results[0]);
+        }
+
+        [Fact]
+        public void CanIndexEdeskaPdf()
+        {
+            const string fileName = @"..\..\..\Internal Test Data\edeska pdf spatne.pdf";
+            using (var fileStream = new FileStream(fileName, FileMode.Open))
+            {
+                var fileText = ParseHelper.ParseIFilter(fileStream, fileName);
+
+                Fulltext.AddDocToFulltext(new FullTextDocument(){FileFulltextInfo = {FileName = fileName, FileText = fileText}, Id = fileName});
+            }
+
+            var results = Fulltext.SearchIndex("Veøejná");
+
+            Assert.NotEmpty(results);
+
+            results.ForEach(s => Console.WriteLine("found id: {0}", s));
         }
 
         [Fact, Trait("Category","Long Running")]
