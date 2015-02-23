@@ -21,7 +21,7 @@ namespace LuceneNetCzechSupport.Tests
                                                              FileFulltextInfo =
                                                              {
                                                                  FileName = "TestFileName",
-                                                                 FileTextReader = "Testovací text".AsStreamReader()
+                                                                 FileText = "Testovací text"
                                                              }
                                                          };
 
@@ -54,14 +54,14 @@ namespace LuceneNetCzechSupport.Tests
 
             using (var reader = File.OpenText(@"TestFiles\Czech.3-2-3.txt"))
             {
-                var text = reader;
+                var text = reader.ReadToEnd();
 
                 var doc = new FullTextDocument()
                           {
                               Id = @"TestFiles\Czech.3-2-3.txt", 
                               FileFulltextInfo =
                               {
-                                  FileName = "Czech.3-2-3.txt", FileTextReader = text
+                                  FileName = "Czech.3-2-3.txt", FileText = text
                               }
                           };
 

@@ -76,7 +76,7 @@ namespace LuceneNetCzechSupport.Lucene
             var doc = new Document();
             doc.Add(new Field(FieldNames.Id, insertedDocument.Id, Field.Store.YES, Field.Index.NOT_ANALYZED));
 
-            var fileTextReader = insertedDocument.FileFulltextInfo.FileTextReader;
+            var fileTextReader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(insertedDocument.FileFulltextInfo.FileText)), Encoding.UTF8);
 
             doc.Add(new Field(FieldNames.FileText, fileTextReader));
 
