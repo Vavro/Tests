@@ -114,8 +114,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Helpers\FileHelpers.cs" />
-    <Compile Include="IFilter\Native.cs" />
-    <Compile Include="IFilter\ParseHelper.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">

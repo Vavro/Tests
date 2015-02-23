@@ -11,7 +11,7 @@ using Lucene.Net.Analysis;
 using LuceneNetCzechSupport.Analyzers;
 using LuceneNetCzechSupport.Lucene;
 using LuceneNetCzechSupport.WpfClient.Helpers;
-using LuceneNetCzechSupport.WpfClient.IFilter;
+using LuceneNetCzechSupport.IFilter;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace LuceneNetCzechSupport.WpfClient.ViewModel

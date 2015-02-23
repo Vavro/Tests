@@ -7,7 +7,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LuceneNetCzechSupport.WpfClient.IFilter
+namespace LuceneNetCzechSupport.IFilter
 {
     internal static class NativeMethods
     {

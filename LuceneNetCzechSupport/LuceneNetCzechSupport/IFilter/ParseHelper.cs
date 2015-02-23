@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using JobManagement;
 
-namespace LuceneNetCzechSupport.WpfClient.IFilter
+namespace LuceneNetCzechSupport.IFilter
 {
     public class ParseHelper
     {
