@@ -24,6 +24,8 @@ namespace LuceneNetCzechSupport.Lucene
 
             public TimeSpan LastIndexingTime { get; set; }
             public TimeSpan LastSearchTime { get; set; }
+
+            public string LastSearchText { get; set; }
         }
 
         private readonly LuceneIndexer _indexer;
@@ -58,6 +60,7 @@ namespace LuceneNetCzechSupport.Lucene
             //Console.WriteLine("Searching text: {0}", searchedText);
             var queryParser = new QueryParser(Version.LUCENE_30, LuceneIndexer.FieldNames.FileText, _indexer.Analyzer);
             var fullTextQuery = queryParser.Parse(searchedText);
+            Stats.LastSearchText = fullTextQuery.ToString();
 
             var mainQuery = fullTextQuery;
 

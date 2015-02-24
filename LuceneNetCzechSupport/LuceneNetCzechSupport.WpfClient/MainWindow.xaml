@@ -69,9 +69,12 @@
                      Width="Auto"
                      Text="{Binding SearchResultCzech}">
             </TextBox>
-            <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
+            <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Vertical">
                 <TextBlock Margin="5" Text="Last search time: "></TextBlock>
                 <TextBlock Margin="0,5" Text="{Binding SupportedCzechIndexes.CzechFulltext.Statistics.LastSearchTime }"></TextBlock>
+
+                <TextBlock Margin="5" Text="Last search text: "></TextBlock>
+                <TextBlock Margin="0,5" Text="{Binding SupportedCzechIndexes.CzechFulltext.Statistics.LastSearchText }"></TextBlock>
             </StackPanel>
 
             <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
@@ -90,9 +93,12 @@
                      Width="Auto"
                      Text="{Binding SearchResultCzechAggressiveSnowball}">
             </TextBox>
-            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
                 <TextBlock Margin="5" Text="Last search time: "></TextBlock>
                 <TextBlock Margin="0,5" Text="{Binding SupportedCzechIndexes.CzechAggressiveSnowballFulltext.Statistics.LastSearchTime }"></TextBlock>
+                
+                <TextBlock Margin="5" Text="Last search text: "></TextBlock>
+                <TextBlock Margin="0,5" Text="{Binding SupportedCzechIndexes.CzechAggressiveSnowballFulltext.Statistics.LastSearchText }"></TextBlock>
             </StackPanel>
 
 
@@ -112,9 +118,12 @@
                      Width="Auto"
                      Text="{Binding SearchResultCzechLightSnowball}">
             </TextBox>
-            <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal">
+            <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Vertical">
                 <TextBlock Margin="5" Text="Last search time: "></TextBlock>
                 <TextBlock Margin="0,5" Text="{Binding SupportedCzechIndexes.CzechLightSnowballFulltext.Statistics.LastSearchTime }"></TextBlock>
+
+                <TextBlock Margin="5" Text="Last search text: "></TextBlock>
+                <TextBlock Margin="0,5" Text="{Binding SupportedCzechIndexes.CzechLightSnowballFulltext.Statistics.LastSearchText }"></TextBlock>
             </StackPanel>
 
             <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
@@ -133,9 +142,12 @@
                      Width="Auto"
                      Text="{Binding SearchResultCzechHunspell}">
             </TextBox>
-            <StackPanel Grid.Row="2" Grid.Column="3" Orientation="Horizontal">
+            <StackPanel Grid.Row="2" Grid.Column="3" Orientation="Vertical">
                 <TextBlock Margin="5" Text="Last search time: "></TextBlock>
                 <TextBlock Margin="0,5" Text="{Binding SupportedCzechIndexes.CzechHunspellFulltext.Statistics.LastSearchTime }"></TextBlock>
+
+                <TextBlock Margin="5" Text="Last search text: "></TextBlock>
+                <TextBlock Margin="0,5" Text="{Binding SupportedCzechIndexes.CzechHunspellFulltext.Statistics.LastSearchText }"></TextBlock>
             </StackPanel>
         </Grid>
     </Grid>

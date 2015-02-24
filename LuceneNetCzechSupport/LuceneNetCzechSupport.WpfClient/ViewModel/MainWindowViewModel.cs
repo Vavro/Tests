@@ -58,6 +58,7 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
             var results = fulltext.Fulltext.SearchIndex(SearchText);
          
             fulltext.Statistics.LastSearchTime = fulltext.Fulltext.Stats.LastSearchTime;
+            fulltext.Statistics.LastSearchText = fulltext.Fulltext.Stats.LastSearchText;
 
             var searchResult = new StringBuilder();
             foreach (var result in results)
@@ -229,6 +230,7 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
     {
         private TimeSpan _lastIndexingTime;
         private TimeSpan _lastSearchTime;
+        private string _lastSearchText;
 
         public TimeSpan LastIndexingTime
         {
@@ -240,6 +242,12 @@ namespace LuceneNetCzechSupport.WpfClient.ViewModel
         {
             get { return _lastSearchTime; }
             set { _lastSearchTime = value; RaisePropertyChanged(() => LastSearchTime);}
+        }
+
+        public string LastSearchText
+        {
+            get { return _lastSearchText; }
+            set { _lastSearchText = value; RaisePropertyChanged(() => LastSearchText); }
         }
     }
 
