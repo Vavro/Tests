@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -49,7 +50,7 @@ namespace LuceneNetCzechSupport.Tests
             Console.WriteLine("found id: {0}", results[0]);
         }
 
-        [Fact]
+        [Fact, Trait("Category", "Pdf")]
         public void CanIndexEdeskaPdf()
         {
             const string fileName = @"..\..\..\Internal Test Data\edeska pdf spatne.pdf";
@@ -113,12 +114,13 @@ namespace LuceneNetCzechSupport.Tests
             }
         }
 
-        [Fact]
+        [Fact, Trait("Category", "Pdf")]
         public void CanIndexAndSearchInComplexPdfs()
         {
             const string directoryName = @"TestFiles\Pruvodce";
 
             var indexingStatistics = new StatisticsCaputerer();
+            var textExtractionStatistics = new StatisticsCaputerer();
 
             if (FileHelpers.IsDirectory(directoryName))
             {
@@ -129,7 +131,11 @@ namespace LuceneNetCzechSupport.Tests
                     var fileName = fileInfo.FullName;
                     using (var fileStream = new FileStream(fileName, FileMode.Open))
                     {
+                        var stopWatch = new Stopwatch();
+                        stopWatch.Start();
                         var fileText = ParseHelper.ParseIFilter(fileStream, fileName);
+                        stopWatch.Stop();
+                        textExtractionStatistics.AddTime(stopWatch.Elapsed);
 
                         Fulltext.AddDocToFulltext(new FullTextDocument() { FileFulltextInfo = { FileName = fileName, FileText = fileText }, Id = fileName });
                         indexingStatistics.AddTime(Fulltext.Stats.LastIndexingTime);
@@ -151,6 +157,77 @@ namespace LuceneNetCzechSupport.Tests
 
             Console.WriteLine("searching took - {0}", searchingStatistics);
         }
+
+        [Fact, Trait("Category", "Pdf")]
+        public void CanIndexAndSearchInALotOfDocuments()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Console.WriteLine("Memory used before indexing: {0:N0} B", GC.GetTotalMemory(false));
+
+            const string directoryName = @"..\..\..\Internal Test Data\MagistratPdf";
+
+            var indexingStatistics = new StatisticsCaputerer();
+            var textExtractionStatistics = new StatisticsCaputerer();
+
+            var emptyFiles = new List<string>();
+
+            if (FileHelpers.IsDirectory(directoryName))
+            {
+                var directory = new DirectoryInfo(directoryName);
+                var files = directory.GetFiles();
+                foreach (var fileInfo in files)
+                {
+                    var fileName = fileInfo.FullName;
+                    using (var fileStream = new FileStream(fileName, FileMode.Open))
+                    {
+                        var stopWatch = new Stopwatch();
+                        stopWatch.Start();
+                        var fileText = ParseHelper.ParseIFilter(fileStream, fileName);
+                        if (string.IsNullOrWhiteSpace(fileText))
+                        {
+                            emptyFiles.Add(fileName);
+                        }
+
+                        stopWatch.Stop();
+                        textExtractionStatistics.AddTime(stopWatch.Elapsed);
+
+                        Fulltext.AddDocToFulltext(new FullTextDocument() { FileFulltextInfo = { FileName = fileName, FileText = fileText }, Id = fileName });
+                        indexingStatistics.AddTime(Fulltext.Stats.LastIndexingTime);
+                    }
+                }
+
+                Console.WriteLine("Text Extraction magistrat files took - {0}", textExtractionStatistics);
+                Console.WriteLine("Indexing magistrat files took - {0}", indexingStatistics.ToString());
+            }
+
+            Console.WriteLine("Memory used after indexing: {0:N0} B", GC.GetTotalMemory(false));
+            Console.WriteLine();
+            var searchingStatistics = new StatisticsCaputerer();
+
+            var searchWords = new List<string>() { "øízení", "zpráva", "radiologie", "øíèany", "oznamuje", "lhùtì", "lhùta", "Jungmannova" };
+            searchWords.ForEach(s =>
+            {
+                var r = Fulltext.SearchIndex(s);
+                searchingStatistics.AddTime(Fulltext.Stats.LastSearchTime);
+                Assert.NotEmpty(r);
+            });
+
+            Console.WriteLine("Memory used after searching: {0:N0} B", GC.GetTotalMemory(false));
+            Console.WriteLine("searching took - {0}", searchingStatistics);
+            Console.WriteLine();
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Console.WriteLine("Memory used after searching after collect: {0:N0} B", GC.GetTotalMemory(false));
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("No text extracted from {0} files:", emptyFiles.Count);
+            emptyFiles.ForEach(Console.WriteLine);
+        }
+
+
     }
 
     class StatisticsCaputerer
@@ -187,8 +264,8 @@ namespace LuceneNetCzechSupport.Tests
 
         public override string ToString()
         {
-            return String.Format("Average: {0}, Max: {1}, Min: {2}, Number of measurements: {3}", 
-                new TimeSpan(_spans.Aggregate((s1, s2) => s1 + s2).Ticks/_spans.Count), MaxSpan, MinSpan, Count);
+            return String.Format("\r\n\t Total time: {4}, \r\n\t Average: {0}, \r\n\t Max: {1}, \r\n\t Min: {2}, \r\n\t Number of measurements: {3}", 
+                new TimeSpan(_spans.Aggregate((s1, s2) => s1 + s2).Ticks/_spans.Count), MaxSpan, MinSpan, Count, new TimeSpan(_spans.Aggregate((s1, s2) => s1 + s2).Ticks));
         }
     }
 }

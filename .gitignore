@@ -154,3 +154,5 @@ $RECYCLE.BIN/
 # Mac desktop service store files
 .DS_Store
 /LuceneNetCzechSupport/Internal Test Data/edeska pdf spatne.pdf
+/LuceneNetCzechSupport/Internal Test Data/MagistratPdf
+/LuceneNetCzechSupport/Internal Test Data/MagistratPdf.rar
