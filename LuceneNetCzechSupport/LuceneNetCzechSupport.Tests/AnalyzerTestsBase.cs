@@ -104,8 +104,11 @@ namespace LuceneNetCzechSupport.Tests
                     var results = Fulltext.SearchIndex(line);
                     stats.AddTime(Fulltext.Stats.LastSearchTime);
 
+
                     Assert.True(results.Any(), String.Format("Couldn't find line {0}", line));
                 }
+
+                Console.WriteLine("Searching took - {0}", stats.ToString());
             }
         }
     }
@@ -140,10 +143,12 @@ namespace LuceneNetCzechSupport.Tests
 
         public TimeSpan MaxSpan { get; set; }
 
+        public int Count { get { return _spans.Count; } }
+
         public override string ToString()
         {
-            return String.Format("Average: {0}, Max: {1}, Min: {2}", 
-                new TimeSpan(_spans.Aggregate((s1, s2) => s1 + s2).Ticks/_spans.Count), MaxSpan, MinSpan);
+            return String.Format("Average: {0}, Max: {1}, Min: {2}, Number of measurements: {3}", 
+                new TimeSpan(_spans.Aggregate((s1, s2) => s1 + s2).Ticks/_spans.Count), MaxSpan, MinSpan, Count);
         }
     }
 }
