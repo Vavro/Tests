@@ -7,6 +7,7 @@ using System.Text;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Cz;
 using LuceneNetCzechSupport.Analyzers;
+using LuceneNetCzechSupport.Helpers;
 using LuceneNetCzechSupport.IFilter;
 using LuceneNetCzechSupport.Lucene;
 using LuceneNetCzechSupport.Tests.Extensions;
@@ -110,6 +111,45 @@ namespace LuceneNetCzechSupport.Tests
 
                 Console.WriteLine("Searching took - {0}", stats.ToString());
             }
+        }
+
+        [Fact]
+        public void CanIndexAndSearchInComplexPdfs()
+        {
+            const string directoryName = @"TestFiles\Pruvodce";
+
+            var indexingStatistics = new StatisticsCaputerer();
+
+            if (FileHelpers.IsDirectory(directoryName))
+            {
+                var directory = new DirectoryInfo(directoryName);
+                var files = directory.GetFiles();
+                foreach (var fileInfo in files)
+                {
+                    var fileName = fileInfo.FullName;
+                    using (var fileStream = new FileStream(fileName, FileMode.Open))
+                    {
+                        var fileText = ParseHelper.ParseIFilter(fileStream, fileName);
+
+                        Fulltext.AddDocToFulltext(new FullTextDocument() { FileFulltextInfo = { FileName = fileName, FileText = fileText }, Id = fileName });
+                        indexingStatistics.AddTime(Fulltext.Stats.LastIndexingTime);
+                    }
+                }
+
+                Console.WriteLine("Indexing pruvodce files took - {0}", indexingStatistics.ToString());
+            }
+
+            var searchingStatistics = new StatisticsCaputerer();
+
+            var searchWords = new List<string>() {"trasa", "Buchlovice", "zdarma", "námìstí", "trasy"};
+            searchWords.ForEach(s =>
+                                {
+                                    var r = Fulltext.SearchIndex(s);
+                                    searchingStatistics.AddTime(Fulltext.Stats.LastSearchTime);
+                                    Assert.NotEmpty(r);
+                                });
+
+            Console.WriteLine("searching took - {0}", searchingStatistics);
         }
     }
 

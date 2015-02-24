@@ -96,6 +96,7 @@
     <Compile Include="Analyzers\CzechHunspellAnalyzer.cs" />
     <Compile Include="Analyzers\CzechLightSnowballAnalyzer.cs" />
     <Compile Include="Analyzers\SupportedAnalyzers.cs" />
+    <Compile Include="Helpers\FileHelpers.cs" />
     <Compile Include="IFilter\Native.cs" />
     <Compile Include="IFilter\ParseHelper.cs" />
     <Compile Include="Lucene\FileFulltextInfo.cs" />

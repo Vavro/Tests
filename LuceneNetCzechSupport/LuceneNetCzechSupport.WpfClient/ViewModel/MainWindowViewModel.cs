@@ -9,8 +9,8 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Lucene.Net.Analysis;
 using LuceneNetCzechSupport.Analyzers;
+using LuceneNetCzechSupport.Helpers;
 using LuceneNetCzechSupport.Lucene;
-using LuceneNetCzechSupport.WpfClient.Helpers;
 using LuceneNetCzechSupport.IFilter;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 

@@ -93,6 +93,81 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="TestFiles\Pruvodce\20130805_-Petnsk_sady.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarieova_trasa_Horska_Kvilda_-_Kvilda_-_def.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarieova_trasa_Hradec_Kralove_-_def %281%29.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarieova_trasa_Hradec_Kralove_-_def.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarieova_trasa_Od_Klementina_pres_Karluv_most_na_Malou_Stranu_-_def.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarieova_trasa_Trojou_az_k_Zoologicke_zahrade_-def.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarieova_trasa__Buchlovice_-_def.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarieova_trasa__Nymburk_-_Podebrady_-_def.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarieova_trasa__Od_Hvezdy_na_Strahov_-_def.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarieova_trasa__Petrinskymi_sady_-_def.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarieova_trasa__Plzen_mesto_piva_-_def.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarieova_trasa__Prazskymi_sady_-def %281%29.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarieova_trasa__Prazskymi_sady_-def.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarieova_trasa__Pres_Stromovku_na_Vystaviste_-_def.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarierova_trasa_Praha_-_Vysehrad_def.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarierova_trasa_Starym_mestem_k_Josefovu_-def.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Bezbarirov_trasa_Mezi_Vclavskm_nmstm_a_nmstm_Republiky_-def.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Cestujeme_bez_barier_po_Cechach.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Nakupujeme_v_Praze_2014_ver2.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Praha_2.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Prazky_hrad__ver012010.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Prvodce_Praha_1_def.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Prvodce_Prahou_bez_barier__2010.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Trasa_Prazska_nahorni_plosina.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Pruvodce\Trasa_Prazske_nabrezi.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LuceneNetCzechSupport\LuceneNetCzechSupport.csproj">
